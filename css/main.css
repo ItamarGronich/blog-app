@@ -1,0 +1,79 @@
+/* =================================================
+   Layout
+   ================================================= */
+
+html {
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
+/**
+ * Required padding for .navbar-fixed-top.
+ * Remove if using .navbar-static-top.
+ * Change if height of navigation changes.
+ */
+
+body {
+	padding-top: 70px;
+	font-size: 1.6em;
+}
+
+.container > footer {
+	margin: 50px 0;
+}
+
+/**
+ * Angular.js pre-hide; This class is removed once Angular loads
+ * 1. !important - Override any other style with higher specificity
+ */
+
+[ng-cloak],
+[data-ng-cloak],
+[x-ng-cloak],
+.ng-cloak,
+.x-ng-cloak {
+	display: none !important; /* 1 */
+}
+
+/* App CSS
+   ================================================= */
+
+/**
+ * Admin - Posts table
+ */
+
+.postsTable th i {
+	color: #aaa;
+	top: 2px;
+}
+
+.postsTable th:hover,
+.postsTable th:focus {
+	background-color: #f5f5f5;
+}
+
+.postsTable tr {
+	cursor: pointer;
+}
+
+.form-group.required label:after {
+	content: ' *';
+	color: red;
+}
+
+/**
+ * Admin - Markdown-HTML Live Preview
+ */
+
+.form-control.previewPane {
+	height: 500px;
+	overflow-y: auto;
+	resize: none;
+	width: 100%;
+}

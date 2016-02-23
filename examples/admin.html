@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>Real-Time Blog App</title>
+
+	<!-- Bootstrap Core CSS -->
+	<link rel="stylesheet" href="../lib/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../lib/css/bootstrap-theme.min.css">
+
+	<!-- Custom CSS -->
+	<link rel="stylesheet" href="../css/main.css">
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+		<script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+	<![endif]-->
+</head>
+
+<body>
+	<!-- Navigation -->
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+		<div class="container">
+
+			<!-- Brand and toggle get grouped for better mobile display -->
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse"
+					data-target="#bs-example-navbar-collapse-1">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#/">Netcraft Academy</a>
+			</div>
+
+			<!-- Collect the nav links, forms, and other content for toggling -->
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li>
+						<a href="#/posts">Posts</a>
+					</li>
+					<li class="active">
+						<a href="#/admin">Admin</a>
+					</li>
+				</ul>
+			</div>
+			<!-- /.navbar-collapse -->
+
+		</div>
+		<!-- /.container -->
+	</nav>
+
+	<!-- Page Content -->
+	<div class="container">
+
+		<div class="row">
+
+			<!-- Admin - Posts Table -->
+			<section class="col-md-8">
+
+				<h2 class="page-header">Edit posts</h2>
+
+				<table class="table table-bordered table-hover table-striped postsTable">
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>
+								Title
+								<span class="pull-right">
+									<!-- <i class="glyphicon glyphicon-chevron-down"></i> -->
+									<!-- <i class="glyphicon glyphicon-chevron-up"></i> -->
+								</span>
+							</th>
+							<th>
+								Author
+								<span class="pull-right">
+									<!-- <i class="glyphicon glyphicon-chevron-down"></i> -->
+									<!-- <i class="glyphicon glyphicon-chevron-up"></i> -->
+								</span>
+							</th>
+							<th>
+								Date
+								<span class="pull-right">
+									<i class="glyphicon glyphicon-chevron-down"></i>
+									<!-- <i class="glyphicon glyphicon-chevron-up"></i> -->
+								</span>
+							</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<th scope="row">1</th>
+							<td>AngularJS - Controllers</td>
+							<td>Ilan Cohen</td>
+							<td>14 Jan, 2015</td>
+						</tr>
+						<tr>
+							<th scope="row">2</th>
+							<td>AngularJS - Modules</td>
+							<td>Ilan Cohen</td>
+							<td>14 Jan, 2015</td>
+						</tr>
+						<tr>
+							<th scope="row">3</th>
+							<td>AngularJS - Routes</td>
+							<td>Ilan Cohen</td>
+							<td>14 Jan, 2015</td>
+						</tr>
+						<tr>
+							<th scope="row">4</th>
+							<td>AngularJS - Services</td>
+							<td>Ilan Cohen</td>
+							<td>14 Jan, 2015</td>
+						</tr>
+						<tr>
+							<th scope="row">5</th>
+							<td>Grunt - Custom Tasks</td>
+							<td>Alex Ilyaev</td>
+							<td>10 Dec, 2014</td>
+						</tr>
+						<tr>
+							<th scope="row">6</th>
+							<td>Grunt - Intro</td>
+							<td>Alex Ilyaev</td>
+							<td>10 Dec, 2014</td>
+						</tr>
+						<tr>
+							<th scope="row">7</th>
+							<td>jQuery - Events, AJAX</td>
+							<td>Amit Choukroun</td>
+							<td>3 Dec, 2014</td>
+						</tr>
+						<tr>
+							<th scope="row">8</th>
+							<td>jQuery - Selectors, DOM</td>
+							<td>Amit Choukroun</td>
+							<td>1 Dec, 2014</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<footer>
+					<a class="btn btn-primary" href="#">Add New Post</a>
+				</footer>
+
+			</section>
+
+			<!-- Blog Sidebar Widgets Column -->
+			<aside class="col-md-4">
+
+				<!-- Blog Search Well -->
+				<div class="well">
+					<h4>Search</h4>
+
+					<form>
+						<div class="input-group">
+							<input type="search" name="search" class="form-control">
+							<span class="input-group-btn">
+								<button class="btn btn-default" type="submit">
+									<span class="glyphicon glyphicon-search"></span>
+								</button>
+							</span>
+						</div>
+						<!-- /.input-group -->
+					</form>
+				</div>
+
+				<!-- Blog Categories Well -->
+				<div class="well">
+					<h3>Filter Posts</h3>
+
+					<div class="list-group">
+						<a href="#" class="list-group-item active">
+							<span class="badge">8</span>
+							Show All Posts
+						</a>
+					</div>
+
+					<h4><small class="glyphicon glyphicon-tag"></small> Category</h4>
+					<div class="list-group">
+						<a href="#" class="list-group-item">
+							<span class="badge">4</span>
+							AngularJS
+						</a>
+						<a href="#" class="list-group-item">
+							<span class="badge">2</span>
+							Grunt
+						</a>
+						<a href="#" class="list-group-item">
+							<span class="badge">6</span>
+							JavaScript
+						</a>
+						<a href="#" class="list-group-item">
+							<span class="badge">2</span>
+							jQuery
+						</a>
+						<a href="#" class="list-group-item">
+							<span class="badge">2</span>
+							Tools
+						</a>
+					</div>
+
+					<h4><small class="glyphicon glyphicon-user"></small> Author</h4>
+					<div class="list-group">
+						<a href="#" class="list-group-item">
+							<span class="badge">2</span>
+							Alex Ilyaev
+						</a>
+						<a href="#" class="list-group-item">
+							<span class="badge">2</span>
+							Amit Choukroun
+						</a>
+						<a href="#" class="list-group-item">
+							<span class="badge">4</span>
+							Ilan Cohen
+						</a>
+					</div>
+
+					<h4><small class="glyphicon glyphicon-time"></small> Month</h4>
+					<div class="list-group">
+						<div>
+							<span class="list-group-item disabled">
+								2015
+							</span>
+							<a href="#" class="list-group-item">
+								<span class="badge">4</span>
+								January
+							</a>
+						</div>
+						<div>
+							<span class="list-group-item disabled">
+								2014
+							</span>
+							<a href="#" class="list-group-item">
+								<span class="badge">4</span>
+								December
+							</a>
+						</div>
+					</div>
+				</div>
+			</aside>
+
+		</div>
+		<!-- /.row -->
+
+		<hr>
+
+		<!-- Footer -->
+		<footer>
+			<div class="row">
+				<div class="col-lg-12">
+					<p>Copyright &copy; Netcraft Academy 2015</p>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		</footer>
+
+	</div>
+	<!-- /.container -->
+
+	<!-- Libraries -->
+	<script src="../lib/js/jquery.min.js"></script>
+	<script src="../lib/js/bootstrap.min.js"></script>
+
+	<!-- App -->
+	<script src="../app/app.js"></script>
+
+</body>
+</html>
