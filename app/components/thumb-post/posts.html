@@ -1,0 +1,47 @@
+<!-- Begin Post -->
+
+<!--
+
+the scope keys:
+    -postInfo {{Object}} - with the post data extracted from JSON object
+     received from the server/source.
+    -date {{function}} - generates a human readable date from the timeSatmp
+     in the current postInfo. formatted as: mmm dd, yyyy.
+
+-->
+<article>
+    <header>
+        <h2>
+            <a href="#/{{}}">{{postInfo.title}}</a>
+        </h2>
+
+        <p>
+            <small class="glyphicon glyphicon-user"></small>
+            by <a href="#">{{postInfo.author}}</a>
+        </p>
+        <p>
+            <small class="glyphicon glyphicon-time"></small>
+            {{date()}}
+        </p>
+    </header>
+
+    <!-- Post Description -->
+    <p>{{postInfo.description}}</p>
+    <br>
+
+    <footer class="clearfix">
+        <p class="pull-left">
+            <b>Tags:&nbsp;</b>
+            <span data-ng-repeat="tag in postInfo.tags">
+                <a href="#" class="label label-default">{{postInfo.tags[$index]}}</a>
+            </span>
+
+        </p>
+
+        <a class="btn btn-primary pull-right" href="#">
+            Read More <i class="glyphicon glyphicon-chevron-right"></i>
+        </a>
+    </footer>
+    <hr>
+</article>
+<!-- End of Post -->

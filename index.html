@@ -63,15 +63,21 @@
 
 		<div class="row">
 
-			<!-- Dynamic Content Here -->
 
-			<main ng-app="blogApp">
 
-				<div ng-controller="dataController as data">
+			<main data-ng-app="blogApp">
 
+				<section class="col-md-8">
+					<h2 class="page-header">
+						{{angular.module('blogApp')}}
+					</h2>
+
+					<!-- Dynamic Content Here -->
 					<ng-view></ng-view>
 
-				</div>
+
+				</section>
+
 
 			</main>
 			<!-- Blog Sidebar Widgets Column -->
@@ -198,6 +204,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>
 	<!-- App -->
 	<script src="app/app.js"></script>
+	<script src="app/components/thumb-post/posts-directive.js"></script>
 
 </body>
 </html>

@@ -10,14 +10,16 @@
     }
 
 
+
     // route callback
-    function configRouter(route){
+    function configRouter(route) {
         route
             .when('/', {
                 redirectTo: '/posts'
             })
             .when('/posts', {
-                templateUrl: '/app/posts/templates/posts.html'
+                templateUrl: '/app/posts/templates/posts-board.html',
+                controller: 'dataController as data'
             })
             .when('/admin', {
                 templateUrl: '/app/admin/templates/admin.html'
@@ -37,3 +39,8 @@
         .config(configRouter)
         .controller('dataController', loadData);
 }());
+
+
+(function () {
+    
+})();
