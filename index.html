@@ -65,7 +65,15 @@
 
 			<!-- Dynamic Content Here -->
 
+			<main ng-app="blogApp">
 
+				<div ng-controller="dataController as data">
+
+					<ng-view></ng-view>
+
+				</div>
+
+			</main>
 			<!-- Blog Sidebar Widgets Column -->
 			<aside class="col-md-4">
 
@@ -185,6 +193,9 @@
 	<script src="lib/js/bootstrap.min.js"></script>
 	<script src="lib/js/marked.min.js"></script>
 
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-sanitize.js"></script>
 	<!-- App -->
 	<script src="app/app.js"></script>
 
