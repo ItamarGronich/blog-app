@@ -9,8 +9,6 @@
         });
     }
 
-
-
     // route callback
     function configRouter(route) {
         route
