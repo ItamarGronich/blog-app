@@ -16,9 +16,15 @@
             .when('/', {
                 redirectTo: '/posts'
             })
-        .when('/posts', {
-            templateUrl: '/app/posts/templates/posts.html'
-        })
+            .when('/posts', {
+                templateUrl: '/app/posts/templates/posts.html'
+            })
+            .when('/admin', {
+                templateUrl: '/app/admin/templates/admin.html'
+            })
+            .otherwise({
+                redirectTo: '/posts'
+            })
     }
 
 
