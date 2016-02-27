@@ -68,9 +68,6 @@
 			<main data-ng-app="blogApp">
 
 				<section class="col-md-8">
-					<h2 class="page-header">
-						{{angular.module('blogApp')}}
-					</h2>
 
 					<!-- Dynamic Content Here -->
 					<ng-view></ng-view>
@@ -205,6 +202,10 @@
 	<!-- App -->
 	<script src="app/app.js"></script>
 	<script src="app/components/thumb-post/posts-directive.js"></script>
+	<script src="app/services/postsService.js"></script>
+	<script src="app/posts/controllers/postsController.js"></script>
+	<script src="app/services/pagination.js"></script>
+	<script src="app/posts/controllers/singlePostController.js"></script>
 
 </body>
 </html>

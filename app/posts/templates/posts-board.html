@@ -1,4 +1,17 @@
-<thumb-posts data-ng-repeat="post in data.posts" info="data.posts[$index]">
+<h2 class="page-header" data-ng-click="click()">
+    Showing {{data.posts.length}} posts
+</h2>
 
+<thumb-posts data-ng-repeat="post in data.posts | limitTo: 3 :((data.pageNumber -1) * 3) as results" info="results[$index]" >
 </thumb-posts>
 
+<ul class="pager">
+    <li class="previous" data-ng-show="data.btnShow('prev')" >
+
+        <a href="#/posts/{{data.pageNumber - 1}}">&larr; Newer</a>
+    </li>
+    <li class="next" data-ng-show="data.btnShow('next')" >
+        <a href="#/posts/{{data.pageNumber + 1}}">  Older &rarr;
+        </a>
+    </li>
+</ul>
