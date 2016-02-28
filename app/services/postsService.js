@@ -32,14 +32,13 @@
              return fullPosts['' + name] = '' + html;
         }
 
-
         /**
          * @function get full post - gets the full post if found on the fullPosts object.
          * @param name {String} the exact name of the post
          * @returns {String} a html fragment of the desired post.
          */
         function getFullPost(name) {
-            return fullPosts['' + name]
+            return fullPosts['' + name];
         }
 
         function getNumberOfPages() {
@@ -48,7 +47,7 @@
 
         function filterPosts(filter) {
             if (filter) {
-                filteredPosts = posts.filter(function(){})
+                filteredPosts = posts.filter(function(){});
             } else {
                 filteredPosts = posts/*.slice(1,2)*/;
             }
@@ -61,7 +60,7 @@
                     posts = e.data.posts;
                     filterPosts();
                     return filteredPosts.sort(function (a, b ) {
-                        return b.date - a.date
+                        return b.date - a.date;
                     });
                 });
         }
@@ -96,7 +95,7 @@
                             console.log('loaded data from the server');
                             var html = $sanitize(response.data); // sanitizes retrieved html
                             return storeFullPost(fileName, html); // stores and returns the html fragment.
-                        })
+                        });
         }
 
 
