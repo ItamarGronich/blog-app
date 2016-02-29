@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-ng-app="blogApp">
 
 <head>
 	<meta charset="utf-8">
@@ -65,8 +65,6 @@
 
 
 
-			<main data-ng-app="blogApp">
-
 				<section class="col-md-8">
 
 					<!-- Dynamic Content Here -->
@@ -76,9 +74,8 @@
 				</section>
 
 
-			</main>
 			<!-- Blog Sidebar Widgets Column -->
-			<aside class="col-md-4">
+			<aside class="col-md-4" data-ng-controller="sideBarController as sb">
 
 				<!-- Blog Search Well -->
 				<div class="well">
@@ -101,9 +98,9 @@
 				<div class="well">
 					<h3>Filter Posts</h3>
 
-					<div class="list-group">
-						<a href="#" class="list-group-item active">
-							<span class="badge">8</span>
+					<div class="list-group" >
+						<a href="#/posts/" class="list-group-item active">
+							<span class="badge" >{{sb.getNumberOfPosts()}}</span>
 							Show All Posts
 						</a>
 					</div>
@@ -206,6 +203,7 @@
 	<script src="app/posts/controllers/postsController.js"></script>
 	<script src="app/services/pagination.js"></script>
 	<script src="app/posts/controllers/singlePostController.js"></script>
+	<script src="app/components/sidebar/sideBarController.js"></script>
 
 </body>
 </html>

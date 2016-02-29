@@ -2,7 +2,7 @@
 
     app.service('postsService', postsService);
 
-    function postsService($http, $sanitize){
+    function postsService($http, $sanitize, $timeout){
 
         /**
          * @Private - all private Data
@@ -15,23 +15,37 @@
         var posts,
             filteredPosts,
             postsPerPage = 3,
-            fullPosts = {};
+            fullPosts = {},
+
+            /*
+            * ======= Filtered Objects ======
+            *
+            * will hold the posts filtered by different categories
+            * */
+            tags = {},
+            authors = {},
+            dates = {};
 
         /**
          * @function stores the HTML fragment in the fullPosts Data base.
          * @param name {String} *Required - represents the file name of the HTML fragment.
-         *                                  WILL BE USED TO CREATE KEY IN DATA BASE FOR THE FRAGMENT.
+         *                                  WILL BE USED TO CREATE KEY IN DATA-BASE FOR THE FRAGMENT.
          * @param html {String} *Required - a html fragment string.
          * @returns {String} html fragment - a string representing the sanitized html fragment.
          */
         function storeFullPost(name, html){
             if (typeof name !== 'string' && typeof html !== 'string') {
-                throw new TypeError('name, & html arguments are not provided or are not strings', 'postsService.js', 13);
+                throw new TypeError('name & html arguments are not provided or are not strings', 'postsService.js', 13);
             }
 
              return fullPosts['' + name] = '' + html;
         }
 
+        function splitToCatagories(postsArr) {
+            postsArr.forEach(function(post){
+               authors[post.author] = post;
+            })
+        }
 
         /**
          * @function get full post - gets the full post if found on the fullPosts object.
@@ -39,7 +53,7 @@
          * @returns {String} a html fragment of the desired post.
          */
         function getFullPost(name) {
-            return fullPosts['' + name]
+            return fullPosts['' + name];
         }
 
         function getNumberOfPages() {
@@ -48,23 +62,60 @@
 
         function filterPosts(filter) {
             if (filter) {
-                filteredPosts = posts.filter(function(){})
+                filteredPosts = posts.filter(function(){});
             } else {
                 filteredPosts = posts/*.slice(1,2)*/;
             }
         }
 
-        function getPosts() {
-            return filteredPosts ||
-                $http({method: 'GET', url: '../../data/posts.json'})
-                .then(function (e) {
-                    posts = e.data.posts;
-                    filterPosts();
-                    return filteredPosts.sort(function (a, b ) {
-                        return b.date - a.date
+
+	    /**
+	     * getPosts module
+         *
+         * @param newRequest [optional] if truthy allways issues a new request
+         * @returns {Promise | Array | } a switch function that either
+         *          returns a promise (if data hasn't arrived yet) or an Array
+         *          of the posts objects sorted by date.
+         */
+        var getPosts = (function () {
+            function sendRequest(){
+                return $http({method: 'GET', url: '../../data/posts.json'})
+                    .then(function (e) {
+                        posts = e.data.posts;
+                        filterPosts();
                     });
-                });
-        }
+            }
+
+            var getPostsJson = (function () {
+                var request;
+                return function() {
+                    if (!request){
+                        request = sendRequest();
+                    }
+                    return request;
+                }
+            })();
+
+            function sortedByDate(fn) {
+                return fn()
+                    .then(function(){
+                        return filteredPosts.sort(function (a, b ) {
+                            return b.date - a.date;
+                        });
+                    });
+            }
+
+            return function switchFunction(newRequest) {
+                if (newRequest) {
+                    return sortedByDate(sendRequest);
+
+                } else {
+                    return filteredPosts ||
+                        sortedByDate(getPostsJson);
+                }
+            }
+        })();
+
 
         /**
          * @function get file name - extracts the filename from a url
@@ -74,6 +125,8 @@
         function getFileName(url) {
             return url.match(/[^\/]+$/).join('');
         }
+
+
 
         /**
          * @function get single post - gets the desired post from the path, sanitizes it,
@@ -96,7 +149,7 @@
                             console.log('loaded data from the server');
                             var html = $sanitize(response.data); // sanitizes retrieved html
                             return storeFullPost(fileName, html); // stores and returns the html fragment.
-                        })
+                        });
         }
 
 
@@ -110,9 +163,11 @@
 
         this.getPosts = getPosts;
 
+        this.returnPosts = function (){return filteredPosts};
+
         this.postsPerPage = function(){ return postsPerPage};
     }
 
-    postsService.$inject = ['$http', '$sanitize'];
+    postsService.$inject = ['$http', '$sanitize', '$timeout'];
 
 })(angular.module('blogApp'));
