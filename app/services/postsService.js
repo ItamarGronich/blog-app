@@ -2,7 +2,7 @@
 
     app.service('postsService', postsService);
 
-    function postsService($http, $sanitize){
+    function postsService($http, $sanitize, $timeout){
 
         /**
          * @Private - all private Data
@@ -15,21 +15,36 @@
         var posts,
             filteredPosts,
             postsPerPage = 3,
-            fullPosts = {};
+            fullPosts = {},
+
+            /*
+            * ======= Filtered Objects ======
+            *
+            * will hold the posts filtered by different categories
+            * */
+            tags = {},
+            authors = {},
+            dates = {};
 
         /**
          * @function stores the HTML fragment in the fullPosts Data base.
          * @param name {String} *Required - represents the file name of the HTML fragment.
-         *                                  WILL BE USED TO CREATE KEY IN DATA BASE FOR THE FRAGMENT.
+         *                                  WILL BE USED TO CREATE KEY IN DATA-BASE FOR THE FRAGMENT.
          * @param html {String} *Required - a html fragment string.
          * @returns {String} html fragment - a string representing the sanitized html fragment.
          */
         function storeFullPost(name, html){
             if (typeof name !== 'string' && typeof html !== 'string') {
-                throw new TypeError('name, & html arguments are not provided or are not strings', 'postsService.js', 13);
+                throw new TypeError('name & html arguments are not provided or are not strings', 'postsService.js', 13);
             }
 
              return fullPosts['' + name] = '' + html;
+        }
+
+        function splitToCatagories(postsArr) {
+            postsArr.forEach(function(post){
+               authors[post.author] = post;
+            })
         }
 
         /**
@@ -53,17 +68,54 @@
             }
         }
 
-        function getPosts() {
-            return filteredPosts ||
-                $http({method: 'GET', url: '../../data/posts.json'})
-                .then(function (e) {
-                    posts = e.data.posts;
-                    filterPosts();
-                    return filteredPosts.sort(function (a, b ) {
-                        return b.date - a.date;
+
+	    /**
+	     * getPosts module
+         *
+         * @param newRequest [optional] if truthy allways issues a new request
+         * @returns {Promise | Array | } a switch function that either
+         *          returns a promise (if data hasn't arrived yet) or an Array
+         *          of the posts objects sorted by date.
+         */
+        var getPosts = (function () {
+            function sendRequest(){
+                return $http({method: 'GET', url: '../../data/posts.json'})
+                    .then(function (e) {
+                        posts = e.data.posts;
+                        filterPosts();
                     });
-                });
-        }
+            }
+
+            var getPostsJson = (function () {
+                var request;
+                return function() {
+                    if (!request){
+                        request = sendRequest();
+                    }
+                    return request;
+                }
+            })();
+
+            function sortedByDate(fn) {
+                return fn()
+                    .then(function(){
+                        return filteredPosts.sort(function (a, b ) {
+                            return b.date - a.date;
+                        });
+                    });
+            }
+
+            return function switchFunction(newRequest) {
+                if (newRequest) {
+                    return sortedByDate(sendRequest);
+
+                } else {
+                    return filteredPosts ||
+                        sortedByDate(getPostsJson);
+                }
+            }
+        })();
+
 
         /**
          * @function get file name - extracts the filename from a url
@@ -73,6 +125,8 @@
         function getFileName(url) {
             return url.match(/[^\/]+$/).join('');
         }
+
+
 
         /**
          * @function get single post - gets the desired post from the path, sanitizes it,
@@ -109,9 +163,11 @@
 
         this.getPosts = getPosts;
 
+        this.returnPosts = function (){return filteredPosts};
+
         this.postsPerPage = function(){ return postsPerPage};
     }
 
-    postsService.$inject = ['$http', '$sanitize'];
+    postsService.$inject = ['$http', '$sanitize', '$timeout'];
 
 })(angular.module('blogApp'));

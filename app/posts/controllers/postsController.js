@@ -1,10 +1,12 @@
 (function (app) {
 
     // load callback
-    function postsController(posts, $routeParams, postsService) {
+    function postsController(posts, $routeParams, postsService, $scope) {
         // call loadData service
         var that = this;
         this.posts = posts;
+
+	    this.getPosts = postsService.getPosts;
 
         this.pageNumber = parseInt($routeParams.pageNumber);
 
@@ -34,7 +36,7 @@
 
     }
 
-    postsController.$inject = ['posts', '$routeParams', 'postsService'];
+    postsController.$inject = ['posts', '$routeParams', 'postsService', '$scope'];
 
 
     app.controller('postsController', postsController);
