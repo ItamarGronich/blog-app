@@ -60,6 +60,6 @@
     configApp.$inject = ['$routeProvider', '$provide'];
 
     // initiallize app with config
-    angular.module('blogApp', ['ngRoute', 'ngSanitize'])
+    angular.module('blogApp', ['ngRoute', 'ngSanitize', 'angular-toArrayFilter'])
         .config(configApp)
 }());

@@ -2,7 +2,7 @@
 
     app.service('postsService', postsService);
 
-    function postsService($http, $sanitize, $timeout){
+    function postsService($http, $sanitize, $filter){
 
         /**
          * @Private - all private Data
@@ -13,7 +13,7 @@
          *                                 allowed to be displayed per page.
          */
         var posts,
-            filteredPosts,
+            filteredPosts, // POSSIBLY DEPRECATED
             postsPerPage = 3,
             fullPosts = {},
 
@@ -42,10 +42,44 @@
         }
 
         function splitToCatagories(postsArr) {
-            postsArr.forEach(function(post){
-               authors[post.author] = post;
-            })
+
+	        for (var i = 0; i < postsArr.length; i++) {
+		        (function(post) {
+
+			        var date = new Date(parseInt(post.date)),
+			            year = date.getFullYear(),
+			            month = date.getMonth();
+
+
+			        authors[post.author] ? authors[post.author].push(post): authors[post.author] = [post];
+
+
+			        if (dates[year]){
+				        dates[year][month] ? dates[year][month].push(post) : dates[year][month] = [post];
+
+
+			        } else {
+				        dates[year] = {};
+
+				        dates[year][month] = [post];
+			        }
+
+
+			        post.tags.forEach(function(tag){
+				        tags[tag] ? tags[tag].push(post) : tags[tag] = [post];
+			        });
+
+		        })(postsArr[i]);
+	        }
+
+
+	        console.dir(dates);
+          /*  postsArr.forEach(function(post){
+
+            });*/
+
         }
+
 
         /**
          * @function get full post - gets the full post if found on the fullPosts object.
@@ -57,14 +91,19 @@
         }
 
         function getNumberOfPages() {
-            return Math.ceil( filteredPosts.length / 3 );
+            return Math.ceil( posts.length / 3 );
         }
 
+
+	    /*
+	    *
+	    * ====== POSSIBLY DEPRECATED ===
+	    * */
         function filterPosts(filter) {
             if (filter) {
                 filteredPosts = posts.filter(function(){});
             } else {
-                filteredPosts = posts/*.slice(1,2)*/;
+                filteredPosts = posts.slice(1,2);
             }
         }
 
@@ -72,7 +111,7 @@
 	    /**
 	     * getPosts module
          *
-         * @param newRequest [optional] if truthy allways issues a new request
+         * @param newRequest [optional] if truthy always issues a new request
          * @returns {Promise | Array | } a switch function that either
          *          returns a promise (if data hasn't arrived yet) or an Array
          *          of the posts objects sorted by date.
@@ -82,7 +121,7 @@
                 return $http({method: 'GET', url: '../../data/posts.json'})
                     .then(function (e) {
                         posts = e.data.posts;
-                        filterPosts();
+	                    splitToCatagories(posts);
                     });
             }
 
@@ -99,7 +138,7 @@
             function sortedByDate(fn) {
                 return fn()
                     .then(function(){
-                        return filteredPosts.sort(function (a, b ) {
+                        return posts.sort(function (a, b ) {
                             return b.date - a.date;
                         });
                     });
@@ -110,7 +149,7 @@
                     return sortedByDate(sendRequest);
 
                 } else {
-                    return filteredPosts ||
+                    return posts ||
                         sortedByDate(getPostsJson);
                 }
             }
@@ -163,11 +202,17 @@
 
         this.getPosts = getPosts;
 
-        this.returnPosts = function (){return filteredPosts};
+        this.returnPosts = function (){return posts};
 
         this.postsPerPage = function(){ return postsPerPage};
+
+	    this.getTags = function (){return tags;};
+
+	    this.getAuthors = function (){return authors;};
+
+	    this.getDates = function (){return dates;};
     }
 
-    postsService.$inject = ['$http', '$sanitize', '$timeout'];
+    postsService.$inject = ['$http', '$sanitize', '$filter'];
 
 })(angular.module('blogApp'));
