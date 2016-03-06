@@ -25,11 +25,12 @@
             .when('/', {
                 redirectTo: '/posts/:pageNumber'
             })
-            .when('/posts/:pageNumber?', {
+            .when('/posts/:pageNumber?:query?', {
                 templateUrl: '/app/posts/templates/posts-board.html',
                 controller: 'postsController as data',
                 resolve: {
                     posts: function (postsService){
+	                    console.log('route cycle');
                         return postsService.getPosts();
                     },
                     genUrl: function (pagination) {

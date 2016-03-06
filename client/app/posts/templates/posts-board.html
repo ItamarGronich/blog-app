@@ -2,7 +2,7 @@
     Showing {{data.posts.length}} posts
 </h2>
 
-<thumb-posts data-ng-repeat="post in data.posts | limitTo: 3 :((data.pageNumber -1) * 3) as results" info="results[$index]" >
+<thumb-posts data-ng-repeat="post in data.posts |limitTo: data.postsPerPage :((data.pageNumber -1) * 3) as results" info="results[$index]" >
 </thumb-posts>
 
 <ul class="pager" >

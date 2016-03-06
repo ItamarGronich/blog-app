@@ -2,7 +2,9 @@
 
     app.service('postsService', postsService);
 
-    function postsService($http, $sanitize, $filter){
+    function postsService($http, $sanitize, $location, $filter){
+
+	    
 
         /**
          * @Private - all private Data
@@ -73,11 +75,6 @@
 	        }
 
 
-	        console.dir(dates);
-          /*  postsArr.forEach(function(post){
-
-            });*/
-
         }
 
 
@@ -91,20 +88,47 @@
         }
 
         function getNumberOfPages() {
-            return Math.ceil( posts.length / 3 );
+            return Math.ceil( filteredPosts.length / 3 );
         }
 
 
-	    /*
-	    *
-	    * ====== POSSIBLY DEPRECATED ===
-	    * */
-        function filterPosts(filter) {
-            if (filter) {
-                filteredPosts = posts.filter(function(){});
-            } else {
-                filteredPosts = posts.slice(1,2);
-            }
+
+        function runQuery(location) {
+	        var params = location.search();
+
+	        var query = Object.keys(params).find(function(param){
+		        return param === 'category' ||
+			           param === 'author'   ||
+			           param === 'search'   ||
+			           param === 'month';
+	        });
+
+
+	        switch (query){
+		        case 'category' :
+			        return filteredPosts = $filter('filter')(posts,{tags: params[query]}, false);
+			        break;
+		        case 'author' :
+			        return filteredPosts = $filter('filter')(posts,{author: params[query].replace('-', ' ')}, false);
+			        break;
+		        case 'month' :
+			        return filteredPosts = $filter('filter')(posts, function(post){
+				        var filterString = params[query].split('-'),
+				            postDate = new Date(parseInt(post.date)),
+				            filterDate = new Date(filterString[0] + ' 01 ' + filterString[1]);
+				        
+
+				        return postDate.getFullYear() === filterDate.getFullYear() && postDate.getMonth() === filterDate.getMonth();   
+			        }, false);
+			        break;
+		        case 'search':
+			        return filteredPosts = posts;
+		        default:
+			        return filteredPosts = posts;
+			        break;
+
+	        }
+
         }
 
 
@@ -117,6 +141,7 @@
          *          of the posts objects sorted by date.
          */
         var getPosts = (function () {
+
             function sendRequest(){
                 return $http({method: 'GET', url: 'data/get-posts'})
                     .then(function (e) {
@@ -138,9 +163,13 @@
             function sortedByDate(fn) {
                 return fn()
                     .then(function(){
-                        return posts.sort(function (a, b ) {
+                        posts.sort(function (a, b ) {
                             return b.date - a.date;
                         });
+
+
+	                    return runQuery($location);
+
                     });
             }
 
@@ -149,7 +178,7 @@
                     return sortedByDate(sendRequest);
 
                 } else {
-                    return posts ||
+                    return runQuery($location) ||
                         sortedByDate(getPostsJson);
                 }
             }
@@ -213,6 +242,6 @@
 	    this.getDates = function (){return dates;};
     }
 
-    postsService.$inject = ['$http', '$sanitize', '$filter'];
+    postsService.$inject = ['$http', '$sanitize', '$location', '$filter'];
 
 })(angular.module('blogApp'));

@@ -6,6 +6,8 @@
         var that = this;
         this.posts = posts;
 
+	    this.postsPerPage = postsService.postsPerPage();
+
 	    this.getPosts = postsService.getPosts;
 
         this.pageNumber = parseInt($routeParams.pageNumber);
