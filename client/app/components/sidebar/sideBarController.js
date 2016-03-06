@@ -4,10 +4,10 @@
 
 	var currentActive = document.body.querySelector('#showAllPosts');
 
-	function sideBarController($scope, postsService, pagination) {
+	function sideBarController($location, postsService, $sce) {
 		var that = this;
 		function assignAllVars(obj){
-			that.allPosts = obj.posts;
+			that.numberOfAllPosts = obj.numberOfAllPosts;
 			that.tags = obj.tags;
 			that.authors = obj.authors;
 
@@ -33,7 +33,7 @@
 				return postsService.getPosts()
 					.then(function(posts){
 						assignAllVars({
-							posts: posts,
+							numberOfAllPosts: postsService.getNumberOfAllPosts(),
 							tags: postsService.getTags(),
 							authors: postsService.getAuthors(),
 							dates: postsService.getDates()
@@ -42,7 +42,7 @@
 			} else {
 
 				assignAllVars({
-					posts: postsService.getPosts(),
+					numberOfAllPosts: postsService.getNumberOfAllPosts(),
 					tags: postsService.getTags(),
 					authors: postsService.getAuthors(),
 					dates: postsService.getDates()
@@ -61,8 +61,26 @@
 			e.target.classList.add('active')
 		};
 
+		this.searchVal = '';
+
+		console.log(this.searchVal);
+
+
+		this.submitSearch = function(event){
+			var that = this;
+			event.stopPropagation();
+			var re = /(['"])/g;
+			var searchValEscaped = this.searchVal.replace(re, '#39');
+
+
+			console.log(searchValEscaped);
+			
+			$location.search({search: searchValEscaped });
+
+		}
+
 
 	}
 
-	sideBarController.$inject = ['$scope', 'postsService', 'pagination']
+	sideBarController.$inject = ['$location', 'postsService', '$sce']
 })(angular.module('blogApp'));

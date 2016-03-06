@@ -122,7 +122,8 @@
 			        }, false);
 			        break;
 		        case 'search':
-			        return filteredPosts = posts;
+			        return filteredPosts = $filter('filter')(posts, params[query], false);
+		            break;
 		        default:
 			        return filteredPosts = posts;
 			        break;
@@ -240,6 +241,10 @@
 	    this.getAuthors = function (){return authors;};
 
 	    this.getDates = function (){return dates;};
+
+	    this.getNumberOfAllPosts = function () {
+		    return posts.length;
+	    }
     }
 
     postsService.$inject = ['$http', '$sanitize', '$location', '$filter'];

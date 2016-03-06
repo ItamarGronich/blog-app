@@ -75,6 +75,26 @@ module.exports = function (grunt) {
 					open: true
 				}
 			}
+		},
+
+		concat: {
+			options: {
+				separator: '\n'
+			},
+			dist: {
+				src: [
+					'client/app/**/*.js'
+				],
+				dest: 'dist/built.js'
+			}
+		},
+
+		uglify: {
+			my_target: {
+				files: {
+					'dist/built.min.js': ['dist/built.js']
+				}
+			}
 		}
 	});
 
@@ -83,4 +103,8 @@ module.exports = function (grunt) {
 
 	// Default task(s).
 	grunt.registerTask('default', ['serve']);
+
+	grunt.registerTask('concatJS', ['concat']);
+
+	grunt.registerTask('shrinkJS', ['concatJS', 'uglify']);
 };

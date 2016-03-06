@@ -82,9 +82,9 @@
 				<div class="well">
 					<h4>Search</h4>
 
-					<form>
+					<form data-ng-submit="sb.submitSearch($event)">
 						<div class="input-group">
-							<input type="search" name="search" class="form-control">
+							<input type="search" name="search" class="form-control" data-ng-model="sb.searchVal">
 							<span class="input-group-btn">
 								<button class="btn btn-default" type="submit">
 									<span class="glyphicon glyphicon-search"></span>
@@ -99,9 +99,13 @@
 				<div class="well" data-ng-click="sb.clicker($event)">
 					<h3>Filter Posts</h3>
 
+
+					<!-- ========================
+								Show All
+					     ======================== -->
 					<div class="list-group" >
 						<a href="#/posts/" class="list-group-item active" id="showAllPosts">
-							<span class="badge" >{{sb.allPosts.length}}</span>
+							<span class="badge" >{{sb.numberOfAllPosts}}</span>
 							Show All Posts
 						</a>
 					</div>
