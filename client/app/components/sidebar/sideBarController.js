@@ -1,6 +1,9 @@
 (function (app) {
 	app.controller('sideBarController', sideBarController);
 
+
+	var currentActive = document.body.querySelector('#showAllPosts');
+
 	function sideBarController($scope, postsService, pagination) {
 		var that = this;
 		function assignAllVars(obj){
@@ -46,6 +49,17 @@
 				})
 			}
 		})();
+
+
+
+		this.clicker = function (e) {
+			if (currentActive){
+				currentActive.classList.remove('active');
+			}
+
+			currentActive = e.target;
+			e.target.classList.add('active')
+		};
 
 
 	}

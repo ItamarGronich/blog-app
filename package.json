@@ -1,5 +1,8 @@
 {
   "name": "blogapp",
+  "scripts": {
+    "start": "node index.js"
+  },
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-contrib-connect": "^0.9.0",
@@ -7,5 +10,8 @@
     "grunt-port-pick": "^1.5.1",
     "jit-grunt": "^0.9.0",
     "time-grunt": "^1.0.0"
+  },
+  "dependencies": {
+    "express": "^4.13.4"
   }
 }

@@ -118,7 +118,7 @@
          */
         var getPosts = (function () {
             function sendRequest(){
-                return $http({method: 'GET', url: '../../data/posts.json'})
+                return $http({method: 'GET', url: 'data/get-posts'})
                     .then(function (e) {
                         posts = e.data.posts;
 	                    splitToCatagories(posts);

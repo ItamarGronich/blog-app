@@ -12,7 +12,7 @@ the scope keys:
 <article>
     <header>
         <h2>
-            <a href="#/post/{{onlyHyphen(postInfo.htmlPath)}}">{{postInfo.title}}</a>
+            <a href="#/post/{{postInfo.slug}}">{{postInfo.title}}</a>
         </h2>
 
         <p>
@@ -40,7 +40,7 @@ the scope keys:
 
 
 
-        <a class="btn btn-primary pull-right" href="#/post/{{onlyHyphen(postInfo.htmlPath)}}">
+        <a class="btn btn-primary pull-right" href="#/post/{{postInfo.slug}}">
             Read More <i class="glyphicon glyphicon-chevron-right"></i>
         </a>
     </footer>

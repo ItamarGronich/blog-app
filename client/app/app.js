@@ -43,8 +43,8 @@
                 controller: 'singlePostController as data',
                 resolve: {
                     post: function (postsService, pagination , $route) {
-                        var fileName = pagination.hyphenUrlToUrl($route.current.params.postTitle),
-                            url = 'data/posts/html/' + fileName + '.html';
+                        var fileName = $route.current.params.postTitle,
+                            url = 'data/get-full-post/' + fileName;
                         return postsService.getSinglePost(url);
                     }
                 }

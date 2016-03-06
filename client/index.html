@@ -29,7 +29,8 @@
 
 		<div class="container">
 
-			<!-- Brand and toggle get grouped for better mobile display -->
+			<!-- Brand and toggle getconsole.log('running a node server on root folder: ' + __dirname + '/../client/', 'listening on port: ' + app.get('port') );
+ grouped for better mobile display -->
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle" data-toggle="collapse"
 					data-target="#bs-example-navbar-collapse-1">
@@ -75,7 +76,7 @@
 
 
 			<!-- Blog Sidebar Widgets Column -->
-			<aside class="col-md-4" data-ng-controller="sideBarController as sb">
+			<aside class="col-md-4" data-ng-controller="sideBarController as sb" >
 
 				<!-- Blog Search Well -->
 				<div class="well">
@@ -95,43 +96,55 @@
 				</div>
 
 				<!-- Blog Categories Well -->
-				<div class="well">
+				<div class="well" data-ng-click="sb.clicker($event)">
 					<h3>Filter Posts</h3>
 
 					<div class="list-group" >
-						<a href="#/posts/" class="list-group-item active">
+						<a href="#/posts/" class="list-group-item active" id="showAllPosts">
 							<span class="badge" >{{sb.allPosts.length}}</span>
 							Show All Posts
 						</a>
 					</div>
 
+
+					<!-- ========================
+								Categories
+					     ======================== -->
 					<h4><small class="glyphicon glyphicon-tag"></small> Category</h4>
 					<div class="list-group">
-						<a href="#" class="list-group-item"
+						<a href="#/posts?category={{tag.$key.toLowerCase()}}" class="list-group-item"
 						   data-ng-repeat="tag in sb.tags | toArray | orderBy: '$key'">
 							<span class="badge">{{tag.length}}</span>
 							{{tag.$key}}
 						</a>
 					</div>
 
+
+					<!-- ========================
+								Authors
+					     ======================== -->
 					<h4><small class="glyphicon glyphicon-user"></small> Author</h4>
 					<div class="list-group">
-						<a href="#" class="list-group-item"
+						<a href="#/posts?author={{author.$key.replace(' ', '-').toLowerCase()}}" class="list-group-item"
 						data-ng-repeat="author in sb.authors | toArray | orderBy: '$key'">
 							<span class="badge">{{author.length}}</span>
 							{{author.$key}}
 						</a>
 					</div>
 
+
+					<!-- ========================
+								Month
+					     ======================== -->
 					<h4><small class="glyphicon glyphicon-time"></small> Month</h4>
-					<div class="list-group">
+					<div class="list-group" >
 						<div data-ng-repeat="years in sb.dates | orderBy: '-0'"
 						data-ng-controller="monthController">
-							<span class="list-group-item disabled" >
+							<span class="list-group-item disabled" data-ng-click="$event.stopPropagation()">
 								{{years[0]}}
 							</span>
 
-							<a href="#" class="list-group-item"
+							<a href="#/posts?month={{toMonth(months[0]).toLowerCase()}}-{{years[0]}}" class="list-group-item"
 							   data-ng-repeat="months in years | limitTo: years.length-1: 1"
 							   data-ng-controller="monthController">
 								<span class="badge">{{months[1].length }}</span>

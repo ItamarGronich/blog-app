@@ -1,7 +1,7 @@
-(function (app) {
+(function (app, $) {
 
     // load callback
-    function postsController(posts, $routeParams, postsService, $scope) {
+    function postsController(posts, $routeParams, postsService, $route) {
         // call loadData service
         var that = this;
         this.posts = posts;
@@ -33,12 +33,28 @@
             }
         };
 
+	    function pageCtrl(event) {
+		    var $el = $(event.currentTarget);
+
+		    if ($el.hasClass('next')) {
+			    console.log('should go up');
+			    
+			    $route.updateParams({pageNumber: ++$routeParams.pageNumber});
+		    } else if ($el.hasClass('previous')) {
+			    console.log('should go down');
+			    
+			    $route.updateParams({pageNumber: --$routeParams.pageNumber});
+		    }
+	    }
+
+	    this.pageCtrl = pageCtrl;
+
 
     }
 
-    postsController.$inject = ['posts', '$routeParams', 'postsService', '$scope'];
+    postsController.$inject = ['posts', '$routeParams', 'postsService', '$route'];
 
 
     app.controller('postsController', postsController);
 
-})(angular.module('blogApp'));
+})(angular.module('blogApp'), jQuery);
