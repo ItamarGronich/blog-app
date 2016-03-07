@@ -25,11 +25,12 @@
             .when('/', {
                 redirectTo: '/posts/:pageNumber'
             })
-            .when('/posts/:pageNumber?', {
+            .when('/posts/:pageNumber?:query?', {
                 templateUrl: '/app/posts/templates/posts-board.html',
                 controller: 'postsController as data',
                 resolve: {
                     posts: function (postsService){
+	                    console.log('route cycle');
                         return postsService.getPosts();
                     },
                     genUrl: function (pagination) {
@@ -43,8 +44,8 @@
                 controller: 'singlePostController as data',
                 resolve: {
                     post: function (postsService, pagination , $route) {
-                        var fileName = pagination.hyphenUrlToUrl($route.current.params.postTitle),
-                            url = 'data/posts/html/' + fileName + '.html';
+                        var fileName = $route.current.params.postTitle,
+                            url = 'data/get-full-post/' + fileName;
                         return postsService.getSinglePost(url);
                     }
                 }
@@ -60,6 +61,6 @@
     configApp.$inject = ['$routeProvider', '$provide'];
 
     // initiallize app with config
-    angular.module('blogApp', ['ngRoute', 'ngSanitize'])
+    angular.module('blogApp', ['ngRoute', 'ngSanitize', 'angular-toArrayFilter'])
         .config(configApp)
 }());
