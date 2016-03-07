@@ -82,7 +82,7 @@
 				<div class="well">
 					<h4>Search</h4>
 
-					<form data-ng-submit="sb.submitSearch($event)">
+					<form data-ng-submit="sb.submitSearch($event); sb.clicker($event)">
 						<div class="input-group">
 							<input type="search" name="search" class="form-control" data-ng-model="sb.searchVal">
 							<span class="input-group-btn">

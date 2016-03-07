@@ -4,7 +4,7 @@
 
 	var currentActive = document.body.querySelector('#showAllPosts');
 
-	function sideBarController($location, postsService, $sce) {
+	function sideBarController($location, postsService, $sanitze) {
 		var that = this;
 		function assignAllVars(obj){
 			that.numberOfAllPosts = obj.numberOfAllPosts;
@@ -70,7 +70,7 @@
 			var that = this;
 			event.stopPropagation();
 			var re = /(['"])/g;
-			var searchValEscaped = this.searchVal.replace(re, '#39');
+			var searchValEscaped = this.searchVal.replace(re, '&#8217');
 
 
 			console.log(searchValEscaped);
@@ -82,5 +82,5 @@
 
 	}
 
-	sideBarController.$inject = ['$location', 'postsService', '$sce']
+	sideBarController.$inject = ['$location', 'postsService', '$sanitize']
 })(angular.module('blogApp'));
