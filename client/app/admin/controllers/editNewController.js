@@ -1,11 +1,33 @@
-(function (app, $) {
+(function (app, $, marked) {
 	
 	app.controller('editNewController', editNewController);
 
-	function editNewController($routeParams, postsService, posts, mdFile) {
+	function editNewController($routeParams, postsService, posts, mdFile, $sanitize) {
 
 		var location = $routeParams.method,
 			that = this;
+
+
+
+		marked.setOptions({
+			// GitHub Flavored Markdown
+			gfm: true,
+			// GFM tables
+			tables: true,
+			// GFM line breaks
+			breaks: true,
+			// Better lists handling
+			smartLists: true,
+			// Better punctuation handling
+			smartypants: true,
+			// Code blocks language prefix (reset default)
+			langPrefix: '',
+			// Prefix for headings ID's
+			headerPrefix: 'hid-',
+			highlight: false
+		});
+
+
 
 
 		function ifEdit() {
@@ -27,6 +49,7 @@
 			that.author = post.author;
 			that.description = post.description;
 			that.tags = post.tags.join(', ');
+			that.html = $sanitize(marked(mdFile.content));
 		}
 
 		function ifNew() {
@@ -46,6 +69,6 @@
 		
 	}
 
-	editNewController.$inject = ['$routeParams', 'postsService', 'posts', 'mdFile'];
+	editNewController.$inject = ['$routeParams', 'postsService', 'posts', 'mdFile', '$sanitize'];
 
-})(angular.module('blogApp'), jQuery);
+})(angular.module('blogApp'), jQuery, marked);
