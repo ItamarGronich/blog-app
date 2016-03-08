@@ -57,6 +57,21 @@ app.get('/data/get-full-post/:fileName', function(req, res){
 	});
 });
 
+app.get('/data/get-md-file/:fileName', function(req, res){
+
+	fs.readFile( root + 'server/data/posts/md/' + req.params.fileName + '.md' ,'utf-8', function(err,data){
+
+		if(err){
+			res.send(err);
+			return;
+		}
+
+		res.send(data);
+
+	});
+});
+
+
 
 
 

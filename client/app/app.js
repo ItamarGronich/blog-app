@@ -25,12 +25,11 @@
             .when('/', {
                 redirectTo: '/posts/:pageNumber'
             })
-            .when('/posts/:pageNumber?:query?', {
+            .when('/posts/:pageNumber?', {
                 templateUrl: '/app/posts/templates/posts-board.html',
                 controller: 'postsController as data',
                 resolve: {
                     posts: function (postsService){
-	                    console.log('route cycle');
                         return postsService.getPosts();
                     },
                     genUrl: function (pagination) {
@@ -50,9 +49,41 @@
                     }
                 }
             })
-            .when('/admin', {
-                templateUrl: '/app/admin/templates/admin.html'
+            .when('/admin/', {
+                templateUrl: '/app/admin/templates/admin.html',
+                controller: 'adminController as admin',
+                resolve: {
+		            posts: function (postsService){
+			            return postsService.getPosts();
+		            }
+	            }
             })
+	    .when('/admin/:method/post/:postTitle?',{
+		    templateUrl: 'app/admin/templates/new-edit.html',
+		    controller: 'editNewController as edit',
+		    resolve: {
+			    posts: function(postsService){
+				    return postsService.getPosts();
+			    },
+			    mdFile: function ($route, $http) {
+				    if ($route.current.params.postTitle) {
+					    return $http({
+						    method: 'GET',
+						    url: 'data/get-md-file/' + $route.current.params.postTitle
+					    })
+					    .then(function (promise) {
+						    var url = promise.config.url,
+						    mdFile = {
+							    fileName: url.slice(url.lastIndexOf('/')),
+						        content: promise.data
+						    };
+
+						    return mdFile;
+					    });
+				    }
+			    }
+		    }
+	    })
     }
 
 

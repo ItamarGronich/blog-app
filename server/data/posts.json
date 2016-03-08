@@ -79,6 +79,16 @@
 			"mdPath": "data/posts/md/jQuery-Selectors,DOM.md",
 			"htmlPath": "data/posts/html/jQuery-Selectors,DOM.html",
 			"description": "Borrowing from CSS 1–3, and then adding its own, jQuery offers a powerful set of tools for matching a set of elements in a document. There are also methods to manipulate the DOM in some manner. A few of those methods simply change one of the attributes of an element, while others set an element's style properties or modify entire elements."
+		},
+		{
+			"title": "Why React Is Better Than Angular",
+			"slug": "Why-React-Is-Better-Than-Angular",
+			"author": "Adi Avni",
+			"date": "1457357319700",
+			"tags": ["ReactJS", "AngularJS"],
+			"mdPath": "data/posts/md/jQuery-Selectors,DOM.md",
+			"htmlPath": "data/posts/html/jQuery-Selectors,DOM.html",
+			"description": "Cuz Itamar said so..."
 		}
 	]
 }

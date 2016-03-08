@@ -44,12 +44,14 @@
 
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li class="active">
-						<a href="#/posts">Posts</a>
+				<ul class="nav navbar-nav" data-ng-controller="navbarController as nav"
+					data-ng-click="nav.changeTabs($event)"
+					id="navbarLinks">
+					<li>
+						<a href="" class="active">Posts</a>
 					</li>
 					<li>
-						<a href="#/admin">Admin</a>
+						<a href="">Admin</a>
 					</li>
 				</ul>
 			</div>
@@ -66,17 +68,17 @@
 
 
 
-				<section class="col-md-8">
+
 
 					<!-- Dynamic Content Here -->
 					<ng-view></ng-view>
 
 
-				</section>
+
 
 
 			<!-- Blog Sidebar Widgets Column -->
-			<aside class="col-md-4" data-ng-controller="sideBarController as sb" >
+			<aside class="col-md-4" data-ng-controller="sideBarController as sb" id="sidebar">
 
 				<!-- Blog Search Well -->
 				<div class="well">
@@ -104,7 +106,8 @@
 								Show All
 					     ======================== -->
 					<div class="list-group" >
-						<a href="#/posts/" class="list-group-item active" id="showAllPosts">
+						<a href="" class="list-group-item active" id="showAllPosts"
+						   data-ng-click="sb.updateUrl()">
 							<span class="badge" >{{sb.numberOfAllPosts}}</span>
 							Show All Posts
 						</a>
@@ -114,9 +117,12 @@
 					<!-- ========================
 								Categories
 					     ======================== -->
+					<!--/posts?category={{tag.$key.toLowerCase()}}-->
 					<h4><small class="glyphicon glyphicon-tag"></small> Category</h4>
 					<div class="list-group">
-						<a href="#/posts?category={{tag.$key.toLowerCase()}}" class="list-group-item"
+						<a href=""
+						   data-ng-click="sb.updateUrl('category', tag.$key.toLowerCase())"
+						   class="list-group-item"
 						   data-ng-repeat="tag in sb.tags | toArray | orderBy: '$key'">
 							<span class="badge">{{tag.length}}</span>
 							{{tag.$key}}
@@ -129,8 +135,9 @@
 					     ======================== -->
 					<h4><small class="glyphicon glyphicon-user"></small> Author</h4>
 					<div class="list-group">
-						<a href="#/posts?author={{author.$key.replace(' ', '-').toLowerCase()}}" class="list-group-item"
-						data-ng-repeat="author in sb.authors | toArray | orderBy: '$key'">
+						<a href="" class="list-group-item"
+						   data-ng-click="sb.updateUrl( 'author', author.$key.replace(' ', '-').toLowerCase() )"
+						   data-ng-repeat="author in sb.authors | toArray | orderBy: '$key'">
 							<span class="badge">{{author.length}}</span>
 							{{author.$key}}
 						</a>
@@ -148,7 +155,8 @@
 								{{years[0]}}
 							</span>
 
-							<a href="#/posts?month={{toMonth(months[0]).toLowerCase()}}-{{years[0]}}" class="list-group-item"
+							<a href="" class="list-group-item"
+							   data-ng-click="sb.updateUrl( 'month', toMonth(months[0]).toLowerCase() + '-' +  years[0] )"
 							   data-ng-repeat="months in years | limitTo: years.length-1: 1"
 							   data-ng-controller="monthController">
 								<span class="badge">{{months[1].length }}</span>
@@ -196,6 +204,9 @@
 	<script src="app/posts/controllers/singlePostController.js"></script>
 	<script src="app/components/sidebar/sideBarController.js"></script>
 	<script src="app/components/sidebar/monthController.js"></script>
+	<script src="app/admin/controllers/adminController.js"></script>
+	<script src="app/components/navbar/navbarController.js"></script>
+	<script src="app/admin/controllers/editNewController.js"></script>
 
 </body>
 </html>

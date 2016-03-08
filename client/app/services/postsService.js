@@ -168,6 +168,8 @@
                             return b.date - a.date;
                         });
 
+	                    
+
 
 	                    return runQuery($location);
 
@@ -221,6 +223,11 @@
                         });
         }
 
+	    function onlyWords(string) {
+		    return string.replace(/\W*/g, '');
+
+	    }
+
 
         /**
          * API
@@ -244,7 +251,9 @@
 
 	    this.getNumberOfAllPosts = function () {
 		    return posts.length;
-	    }
+	    };
+
+	    this.onlyWords = onlyWords;
     }
 
     postsService.$inject = ['$http', '$sanitize', '$location', '$filter'];

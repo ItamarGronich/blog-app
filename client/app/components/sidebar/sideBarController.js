@@ -4,8 +4,11 @@
 
 	var currentActive = document.body.querySelector('#showAllPosts');
 
-	function sideBarController($location, postsService, $sanitze) {
-		var that = this;
+	function sideBarController($location, postsService, pagination, $rootScope) {
+		var that = this,
+			$sidebar = $('#sidebar');
+		
+		
 		function assignAllVars(obj){
 			that.numberOfAllPosts = obj.numberOfAllPosts;
 			that.tags = obj.tags;
@@ -21,7 +24,6 @@
 				that.dates.push(arr);
 			}
 
-			console.log(that.dates)
 		}
 
 
@@ -63,24 +65,33 @@
 
 		this.searchVal = '';
 
-		console.log(this.searchVal);
-
 
 		this.submitSearch = function(event){
 			var that = this;
 			event.stopPropagation();
 			var re = /(['"])/g;
 			var searchValEscaped = this.searchVal.replace(re, '&#8217');
-
-
-			console.log(searchValEscaped);
 			
 			$location.search({search: searchValEscaped });
 
-		}
+		};
+
+		$rootScope.$on('$routeChangeSuccess', function(a,b,c){
+
+			var currentLocation = $location.path().split('/').slice(0,3).join('/'),
+				pathEdit = '/admin/edit',
+				pathNew = '/admin/new';
+
+			$sidebar.toggleClass('collapse', (currentLocation === pathEdit || currentLocation === pathNew))
+		});
 
 
+
+		this.updateUrl = pagination.updateUrl;
 	}
+	
+	
 
-	sideBarController.$inject = ['$location', 'postsService', '$sanitize']
+
+	sideBarController.$inject = ['$location', 'postsService', 'pagination', '$rootScope']
 })(angular.module('blogApp'));
