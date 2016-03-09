@@ -20,6 +20,29 @@
             return $delegate;
         }]);
 
+
+        /*========================================
+        *       Marked Library Configuration
+        * ======================================== */
+
+	    marked.setOptions({
+		    // GitHub Flavored Markdown
+		    gfm: true,
+		    // GFM tables
+		    tables: true,
+		    // GFM line breaks
+		    breaks: true,
+		    // Better lists handling
+		    smartLists: true,
+		    // Better punctuation handling
+		    smartypants: true,
+		    // Code blocks language prefix (reset default)
+		    langPrefix: '',
+		    // Prefix for headings ID's
+		    headerPrefix: 'hid-',
+		    highlight: false
+	    });
+
         // router configuration
         $routeProvider
             .when('/', {
@@ -38,8 +61,7 @@
                 }
             })
             .when('/post/:postTitle', {
-                template: '<div data-ng-bind-html="data.post"></div>'
-                ,
+                template: '<section class="col-md-8"><div data-ng-bind-html="data.post"></div></section>',
                 controller: 'singlePostController as data',
                 resolve: {
                     post: function (postsService, pagination , $route) {

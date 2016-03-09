@@ -24,13 +24,15 @@
         </tr>
         </thead>
 
-        <tbody>
+        <tbody data-ng-click="admin.goToPost($event)">
+
         <tr data-ng-repeat="post in admin.posts | orderBy: admin.order">
-            <th>{{$index +1}}</th>
-            <td>{{post.title}}</td>
-            <td>{{post.author}}</td>
-            <td>{{post.date | date: 'mediumDate'}}</td>
+                <th>{{$index +1}}</th>
+                <td>{{post.title}}</td>
+                <td>{{post.author}}</td>
+                <td>{{post.date | date: 'mediumDate'}}</td>
         </tr>
+
         </tbody>
     </table>
 

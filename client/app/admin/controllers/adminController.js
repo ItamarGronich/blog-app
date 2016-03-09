@@ -2,7 +2,7 @@
 
 	app.controller('adminController', adminController);
 
-	function adminController(postsService, posts, $rootScope, $scope, $timeout) {
+	function adminController(postsService, posts, $location    ) {
 
 		var admin = this,
 		    orderBy = 'date',
@@ -72,12 +72,22 @@
 				.append(arrowEl);
 		}
 
+		function goToPost(event){
+			var slug = angular.element(event.target).scope().post.slug,
+				path = '/admin/edit/post/' + slug;
+			$location.path(path);
+			
+
+		}
+
 		appendArrow(); // appending arrow to the default category
 
 		admin.clickedOnFilter = clickedOnFilter;
 
+		admin.goToPost = goToPost;
+
 
 	}
 
-	adminController.$inject = ['postsService', 'posts', '$rootScope', '$scope', '$timeout'];
+	adminController.$inject = ['postsService', 'posts', '$location'];
 })(angular.module('blogApp'), jQuery);

@@ -5,27 +5,12 @@
 	function editNewController($routeParams, postsService, posts, mdFile, $sanitize) {
 
 		var location = $routeParams.method,
+			slug = $routeParams.postTitle,
 			that = this;
 
 
+		
 
-		marked.setOptions({
-			// GitHub Flavored Markdown
-			gfm: true,
-			// GFM tables
-			tables: true,
-			// GFM line breaks
-			breaks: true,
-			// Better lists handling
-			smartLists: true,
-			// Better punctuation handling
-			smartypants: true,
-			// Code blocks language prefix (reset default)
-			langPrefix: '',
-			// Prefix for headings ID's
-			headerPrefix: 'hid-',
-			highlight: false
-		});
 
 
 
@@ -38,23 +23,39 @@
 			var post;
 
 			for (var key in posts) {
-				if (posts.hasOwnProperty(key) && posts[key] !== undefined) {
+				if (posts.hasOwnProperty(key) && posts[key] !== undefined && posts[key].slug === slug) {
 					post = posts[key];
 				}
 			}
 
-			that.mdFile = mdFile.content;
+			that.mdFile = (function(){
+				if (mdFile.content.code = 'ENOENT') { return}
+				mdFile.content
+			})();
 			that.header = 'Edit Post';
 			that.title = post.title;
 			that.author = post.author;
 			that.description = post.description;
 			that.tags = post.tags.join(', ');
-			that.html = $sanitize(marked(mdFile.content));
+			that.html = (function(){
+				console.log(that.mdFile);
+				
+				if (!that.mdFile) {return}
+				return $sanitize(marked(mdFile.content))
+			})();
+			that.renderHTML = function ($event){
+				if (!that.mdFile) { $event.preventDefault(); return;}
+				 renderHTML(that.mdFile);
+			}
 		}
 
 		function ifNew() {
 			that.header = 'New Post';
 
+		}
+
+		function renderHTML(markdown){
+			that.html =  $sanitize(marked(markdown));
 		}
 
 
