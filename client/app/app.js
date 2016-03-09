@@ -100,6 +100,9 @@
 						        content: promise.data
 						    };
 
+						    console.log(mdFile);
+						    
+
 						    return mdFile;
 					    });
 				    }

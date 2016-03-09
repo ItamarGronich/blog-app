@@ -90,5 +90,25 @@
 			"htmlPath": "data/posts/html/jQuery-Selectors,DOM.html",
 			"description": "Cuz Itamar said so..."
 		}
-	]
+	],
+	"slugs" : {
+		"AngularJS-Controllers":  ["AngularJS-Controllers"],
+		"AngularJS-Modules":  ["AngularJS-Modules"],
+		"AngularJS-Routes":  ["AngularJS-Routes"],
+		"AngularJS-Services":  ["AngularJS-Services"],
+		"Grunt-Custom-Tasks":  ["Grunt-Custom-Tasks"],
+		"Grunt-Intro":  ["Grunt-Intro"],
+		"jQuery-Events-AJAX":  ["jQuery-Events-AJAX"],
+		"jQuery-Selectors-DOM":  ["jQuery-Selectors-DOM"],
+		"Why-React-Is-Better-Than-Angular":  ["Why-React-Is-Better-Than-Angular"]
+	}
 }
+
+
+
+
+
+
+
+
+

@@ -9,7 +9,26 @@
 			that = this;
 
 
-		
+
+		that.mdFile = (function(){
+			
+			if (mdFile && mdFile.content.code === 'ENOENT') {return}
+
+			if (!mdFile) {return}
+
+			return mdFile.content;
+		})();
+
+		that.html = (function(){
+			if (!that.mdFile) {return}
+			return $sanitize(marked(mdFile.content))
+		})();
+
+		that.renderHTML = function (){
+			
+			if (!that.mdFile) { renderHTML(''); return;}
+			renderHTML(that.mdFile);
+		};
 
 
 
@@ -28,29 +47,20 @@
 				}
 			}
 
-			that.mdFile = (function(){
-				if (mdFile.content.code = 'ENOENT') { return}
-				mdFile.content
-			})();
+
+			that.showDelete = true;
+
 			that.header = 'Edit Post';
 			that.title = post.title;
 			that.author = post.author;
 			that.description = post.description;
 			that.tags = post.tags.join(', ');
-			that.html = (function(){
-				console.log(that.mdFile);
-				
-				if (!that.mdFile) {return}
-				return $sanitize(marked(mdFile.content))
-			})();
-			that.renderHTML = function ($event){
-				if (!that.mdFile) { $event.preventDefault(); return;}
-				 renderHTML(that.mdFile);
-			}
+
 		}
 
 		function ifNew() {
 			that.header = 'New Post';
+			that.showDelete = false;
 
 		}
 

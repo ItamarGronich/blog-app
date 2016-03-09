@@ -15,9 +15,10 @@
          *                                 allowed to be displayed per page.
          */
         var posts,
-            filteredPosts, // POSSIBLY DEPRECATED
+            filteredPosts,
             postsPerPage = 3,
             fullPosts = {},
+	        slugs, // on Object of slugs every key is an array with two props 0: slug 1: number of copies
 
             /*
             * ======= Filtered Objects ======
@@ -27,6 +28,10 @@
             tags = {},
             authors = {},
             dates = {};
+
+
+	    
+
 
         /**
          * @function stores the HTML fragment in the fullPosts Data base.
@@ -147,6 +152,7 @@
                 return $http({method: 'GET', url: 'data/get-posts'})
                     .then(function (e) {
                         posts = e.data.posts;
+	                    slugs = e.data.slugs;
 	                    splitToCatagories(posts);
                     });
             }
@@ -167,8 +173,6 @@
                         posts.sort(function (a, b ) {
                             return b.date - a.date;
                         });
-
-	                    
 
 
 	                    return runQuery($location);
