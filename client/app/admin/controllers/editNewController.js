@@ -2,13 +2,33 @@
 	
 	app.controller('editNewController', editNewController);
 
-	function editNewController($routeParams, postsService, posts, mdFile, $sanitize) {
+	function editNewController($routeParams, postsService, posts, mdFile, $sanitize, pagination) {
 
 		var location = $routeParams.method,
 			slug = $routeParams.postTitle,
 			that = this;
 
+		function submit(method) {
 
+			var postData = {
+				post: {
+					title: that.title,
+					slug: undefined,
+					author: that.author,
+					date: Date.now().toString(),
+					tags: that.tags.split(', '),
+					description: that.description
+				},
+				postHtml: that.html,
+				postMd: that.mdFile
+			};
+
+			console.log(postData);
+			
+			postsService.sendPost(postData, method);
+
+
+		}
 
 		that.mdFile = (function(){
 			
@@ -49,18 +69,28 @@
 
 
 			that.showDelete = true;
-
+			that.method = 'PUT';
 			that.header = 'Edit Post';
 			that.title = post.title;
 			that.author = post.author;
 			that.description = post.description;
 			that.tags = post.tags.join(', ');
 
+			that.submit = function(){
+				submit(false);
+			};
+
 		}
 
 		function ifNew() {
 			that.header = 'New Post';
 			that.showDelete = false;
+
+			that.method = 'POST';
+
+			that.submit = function(){
+				submit(true);
+			};
 
 		}
 
@@ -77,9 +107,10 @@
 				ifNew();
 			}
 		})(location);
+
+
 		
 	}
 
-	editNewController.$inject = ['$routeParams', 'postsService', 'posts', 'mdFile', '$sanitize'];
-
+	editNewController.$inject = ['$routeParams', 'postsService', 'posts', 'mdFile', '$sanitize', 'pagination'];
 })(angular.module('blogApp'), jQuery, marked);

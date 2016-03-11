@@ -29,8 +29,32 @@
             authors = {},
             dates = {};
 
+/*	    function slugger(title) {
+		    if (!slugs.hasOwnProperty(title)) {
+			    return title;
+		    }
 
-	    
+		    var newTitle = title.replace(/-\d/, '');
+
+		    return slugger(newTitle + '-' + (++slugs[title]));
+
+	    }*/
+
+
+	    /**
+	     *
+	     * @param postData (Object} - should contain the full post in postData.fullPost and should contain post
+	     *                            thumb in postData.post.
+	     * @returns {String} the URL to current entered post.
+	     */
+	    function sendPost(data, method) {
+
+		    if (method === 'POST') {
+			    return $http.post('data/new-post', data);
+		    } else {
+			    return $http.put('data/edit-post', data);
+		    }
+	    }
 
 
         /**
@@ -221,9 +245,11 @@
             // gets post
             return $http({method: 'GET', url: path})
                         .then(function (response) {
-                            console.log('loaded data from the server');
-                            var html = $sanitize(response.data); // sanitizes retrieved html
-                            return storeFullPost(fileName, html); // stores and returns the html fragment.
+	                        console.log('loaded data from the server');
+	                        var html = $sanitize(response.data); // sanitizes retrieved html
+	                        return storeFullPost(fileName, html); // stores and returns the html fragment.
+
+
                         });
         }
 
@@ -258,6 +284,8 @@
 	    };
 
 	    this.onlyWords = onlyWords;
+
+    this.sendPost = sendPost;
     }
 
     postsService.$inject = ['$http', '$sanitize', '$location', '$filter'];

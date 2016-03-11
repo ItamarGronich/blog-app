@@ -1,15 +1,16 @@
 <section class="col-sm-12">
     <h2 class="page-header">{{edit.header}}</h2>
 
-    <!-- Invalid Input Alert -->
-    <!-- <div class="alert alert-danger" role="alert">
-        The entered <strong>Title</strong> already exists in another post.
-    </div> -->
-    <!-- <div class="alert alert-danger" role="alert">
-        One or more required fields have no value.
-    </div> -->
 
-    <form action="post/submit-post/" method="POST">
+<!--     Invalid Input Alert
+     <div class="alert alert-danger" role="alert">
+        The entered <strong>Title</strong> already exists in another post.
+    </div>
+     <div class="alert alert-danger" role="alert">
+        One or more required fields have no value.
+    </div>-->
+
+    <form id="postEditor" data-ng-submit="edit.submit(edit.method)">
         <!-- Top Settings -->
         <div class="row">
             <div class="col-sm-6">
@@ -73,7 +74,7 @@
         </div>
         <hr>
 
-        <button type="submit" class="btn btn-primary">Save Post</button>
+        <button type="submit" class="btn btn-primary" >Save Post</button>
         <button class="btn btn-danger pull-right" data-ng-show="edit.showDelete">Delete Post</button>
     </form>
 </section>
