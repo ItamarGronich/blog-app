@@ -1,5 +1,5 @@
 var fs = require('fs');
-var root = __dirname + '/../';
+var root = __dirname + '/../../';
 var promisify = require('../utilities/promisify.js');
 
 
@@ -7,9 +7,12 @@ var promisify = require('../utilities/promisify.js');
  * General read write functions
  */
 
+
+
+
 function readMd(slug) {
 	return promisify(function(slug){
-		var mdDestination = root + 'server/data/md/';
+		var mdDestination = root + 'server/data/posts/md/';
 		var promise = this;
 		fs.readFile(mdDestination + slug + '.md', 'utf8', (err,data) => {
 			if (err) {
@@ -17,14 +20,14 @@ function readMd(slug) {
 				return;
 			}
 			promise.resolve(data);
-		}, [slug]);
-	})
+		});
+	}, [slug])
 
 }
 
 function readHtml(slug) {
 	return promisify(function(slug) {
-		var htmlDestination = root + 'server/data/html/';
+		var htmlDestination = root + 'server/data/posts/html/';
 		var promise = this;
 		fs.readFile(htmlDestination + slug + '.html', 'utf8', (err, data) => {
 			if (err) {
@@ -38,8 +41,10 @@ function readHtml(slug) {
 
 function writeHtml(postData) {
 	return promisify(function(postData){
-		var htmlDestination = root + 'server/data/html/';
+		var htmlDestination = root + 'server/data/posts/html/';
 		var promise = this;
+
+
 		fs.writeFile(htmlDestination + postData.post.slug + '.html', postData.postHtml,'utf8', (err) => {
 			if (!err) {
 				promise.resolve();
@@ -54,9 +59,12 @@ function writeHtml(postData) {
 
 function writeMd (postData) {
 	return promisify(function(postData){
-		var htmlDestination = root + 'server/data/html/';
+		var mdDestination = root + 'server/data/posts/md/';
 		var promise = this;
-		fs.writeFile(htmlDestination + postData.post.slug + '.md', postData.postMd, 'utf8', (err) => {
+
+
+
+		fs.writeFile(mdDestination + postData.post.slug + '.md', postData.postMd, 'utf8', (err) => {
 			if (!err) {
 				promise.resolve();
 				return;
@@ -68,33 +76,73 @@ function writeMd (postData) {
 	}, [postData]);
 }
 
+function deleteMd(slug) {
+	return promisify(function(slug){
+		var mdDestination = root + 'server/data/posts/md/';
+		var promise = this;
+
+		fs.unlink(mdDestination + slug + '.md', (err) => {
+			if (!err) {
+				promise.resolve();
+				return;
+			}
+
+			promise.reject();
+		})
+
+	}, [slug]);
+}
+
+function deleteHtml(slug) {
+	return promisify(function(slug){
+		var htmlDestination = root + 'server/data/posts/html/';
+		var promise = this;
+
+		fs.unlink(htmlDestination + slug + '.html', (err) => {
+			if (!err) {
+				promise.resolve();
+				return;
+			}
+
+			promise.reject();
+		})
+
+	}, [slug]);
+}
 
 function readPostsJson() {
 	return promisify(function() {
 		var jsonDestination = root + 'server/data/posts.json';
 		var promise = this;
-		fs.readFile(jsonDestination, function (err, data) {
+		fs.readFile(jsonDestination, 'utf-8' , function (err, data) {
+
+
 			if (err) {
 				promise.reject(err);
 				return;
 			}
-			promise.resolve(JSON.parse(data).posts);
+			promise.resolve(JSON.parse(data));
 		});
 	});
 }
 
-function writePostsJson(postsArr) {
-	return promisify(function(postsArr) {
+function writePostsJson(JSONfile) {
+
+	return promisify(function(JSONfile) {
 		var jsonDestination = root + 'server/data/posts.json';
 		var promise = this;
-		fs.writeFile(jsonDestination, JSON.stringify(postsArr), 'utf8', (err) => {
+
+
+		fs.writeFile(jsonDestination, JSON.stringify(JSONfile ,null,2), 'utf8', (err) => {
 			if (err) {
 				promise.reject(err);
 				return;
 			}
+
+
 			promise.resolve();
 		})
-	}, [postsArr]);
+	}, [JSONfile]);
 
 }
 
@@ -106,17 +154,22 @@ function writePostsJson(postsArr) {
 var Posts = (function(){
 
 	// THE MAIN POSTS ARR. an array of post objects.
+	var postsObj;
 	var postsArr;
 
-	readPostsJson
-		.then(function(posts){
-			postsArr = posts;
+	readPostsJson()
+		.then(function(data){
+			postsObj = data;
+			postsArr = postsObj.posts;
 		});
 
 	function findInPosts(query) {
+
+
 		return postsArr.findIndex(function(post){
 			for (var key in post) {
 				if (post.hasOwnProperty(key) && post[key] === query) {
+
 					return true;
 				}
 			}
@@ -128,35 +181,44 @@ var Posts = (function(){
 	return {
 		enterNewPost: function(post){
 			var newPost = postsArr[postsArr.push(post) - 1];
-			writePostsJson();
+
+
+			writePostsJson(postsObj);
 			return newPost;
 		},
-		deletePost: function(post){
-			var index = findInPosts(post.slug);
+		deletePost: function(slug){
+			var index = findInPosts(slug);
+
+			var deletedPost;
+			if(index !== -1) {deletedPost = postsArr.splice(index,1)[0];}
 
 
-			if(index !== -1) {var deletedPost = postsArr.splice(index,1)[0];}
-
-
-			writePostsJson();
+			writePostsJson(postsObj);
 
 			return deletedPost;
 
 		},
 		editPost: function(post){
 			var index = findInPosts(post.slug);
+			var editedPost;
+			if(index !== -1) {editedPost = postsArr[index] = post; }
 
-			if(index !== -1) {var editedPost = postsArr[index] = post; }
-
-			writePostsJson();
+			writePostsJson(postsObj);
 			return editedPost;
 		},
 		getPosts: function(){
-			return postsArr;
+			return promisify(function(){
+				this.resolve(postsObj);
+			});
+
 		},
 		ifExists: function (post, callback) {
+
+
 			var found = findInPosts(post.slug);
-			if (found) {
+
+
+			if (found !== -1) {
 				callback(post, null);
 			} else {
 				callback(null, post);
@@ -173,45 +235,53 @@ var FullPosts = (function(){
 
 	function writeFiles(postData) {
 		return Promise.all([writeHtml(postData), writeMd(postData)])
-		.then(function(){
-			return FullPosts.getFiles(postData.post.slug);
-		});
+			.then(function(){
+				return FullPosts.getFiles(postData.post.slug);
+			});
+	}
+
+	function deleteFiles(slug) {
+		return Promise.all([deleteHtml(slug), deleteMd(slug)]);
 	}
 
 
 	function getFiles(slug) {
 		return Promise.all([readMd(slug), readHtml(slug)])
 			.then(function(values){
-				return{
-					postHtml: values[1],
-					postMd: values[0]
-				}
-			},
-			function(reason){
-				console.log(reason);
-			})
+					return{
+						postHtml: values[1],
+						postMd: values[0]
+					}
+				},
+				function(reason){
+					console.log(reason);
+				})
 	}
 
 	return {
 		writeFiles: writeFiles,
-		getFiles: getFiles
+		getFiles: getFiles,
+		deleteFiles: deleteFiles
 	};
 
 })();
 
 function generateUniqueSlug(fileName) {
-	return fileName + '-' + process.hrtime().join('');
+	var newFileName = fileName.replace(/(-\d{14})/g,'');
+	return newFileName + '-' + process.hrtime().join('');
 }
 
 
 function submitPost(postData){
-	var newPost;
+
+
+	var newPost = {};
 
 	return promisify(function(){
 		var promise = this;
 		function createAllData(exists){
 			if (exists) {
-				exists.slug = generateUniqueSlug(exists.slug);
+				postData.post.slug = generateUniqueSlug(postData.post.slug);
 			}
 
 			newPost.post = Posts.enterNewPost(postData.post);
@@ -250,9 +320,31 @@ function editPost(postData) {
 	})
 }
 
+function deletePost(slug) {
+	return promisify(function(){
+		var promise = this;
+
+		console.log(slug);
+		if (!Posts.deletePost(slug)) {
+			promise.reject('post does not exist');
+			return;
+		}
+
+		FullPosts.deleteFiles(slug)
+			.then(function(){
+				promise.resolve(slug);
+			});
+
+	})
+}
+
 
 module.exports = {
 	submitPost: submitPost,
 	editPost: editPost,
-	getAllPosts: Posts.getPosts
+	getPosts: Posts.getPosts,
+	deletePost: deletePost,
+	getMd: readMd,
+	getHtml: readHtml
+
 };

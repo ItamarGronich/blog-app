@@ -4,12 +4,15 @@
 
 	var currentActive = document.body.querySelector('#showAllPosts');
 
-	function sideBarController($location, postsService, pagination, $rootScope) {
+	function sideBarController($location, postsService, pagination, $rootScope, $scope) {
 		var that = this,
 			$sidebar = $('#sidebar');
+
 		
 		
 		function assignAllVars(obj){
+
+			console.log('run');
 			that.numberOfAllPosts = obj.numberOfAllPosts;
 			that.tags = obj.tags;
 			that.authors = obj.authors;
@@ -30,10 +33,17 @@
 		/**
 		 * IFI ** start at instantiation **
 		 */
-		this.waitForPosts = (function (){
+		function instantiateData(){
 			if (typeof postsService.getPosts().then === 'function') {
 				return postsService.getPosts()
-					.then(function(posts){
+					.then(function(){
+						console.log({
+							numberOfAllPosts: postsService.getNumberOfAllPosts(),
+							tags: postsService.getTags(),
+							authors: postsService.getAuthors(),
+							dates: postsService.getDates()
+						});
+
 						assignAllVars({
 							numberOfAllPosts: postsService.getNumberOfAllPosts(),
 							tags: postsService.getTags(),
@@ -43,6 +53,14 @@
 					})
 			} else {
 
+
+				console.log({
+					numberOfAllPosts: postsService.getNumberOfAllPosts(),
+					tags: postsService.getTags(),
+					authors: postsService.getAuthors(),
+					dates: postsService.getDates()
+				});
+				
 				assignAllVars({
 					numberOfAllPosts: postsService.getNumberOfAllPosts(),
 					tags: postsService.getTags(),
@@ -50,7 +68,7 @@
 					dates: postsService.getDates()
 				})
 			}
-		})();
+		}
 
 
 
@@ -76,13 +94,15 @@
 
 		};
 
-		$rootScope.$on('$routeChangeSuccess', function(a,b,c){
+		$rootScope.$on('$routeChangeSuccess', function() {
 
-			var currentLocation = $location.path().split('/').slice(0,3).join('/'),
-				pathEdit = '/admin/edit',
-				pathNew = '/admin/new';
+			var currentLocation = $location.path().split('/').slice(0, 3).join('/'),
+			    pathEdit        = '/admin/edit',
+			    pathNew         = '/admin/new';
 
-			$sidebar.toggleClass('collapse', (currentLocation === pathEdit || currentLocation === pathNew))
+			$sidebar.toggleClass('collapse', (currentLocation === pathEdit || currentLocation === pathNew));
+
+			instantiateData();
 		});
 
 
@@ -91,7 +111,8 @@
 	}
 	
 	
+	
 
 
-	sideBarController.$inject = ['$location', 'postsService', 'pagination', '$rootScope']
+	sideBarController.$inject = ['$location', 'postsService', 'pagination', '$rootScope', '$scope']
 })(angular.module('blogApp'));

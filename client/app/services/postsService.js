@@ -25,20 +25,11 @@
             *
             * will hold the posts filtered by different categories
             * */
-            tags = {},
-            authors = {},
-            dates = {};
+            tags,
+            authors,
+            dates;
 
-/*	    function slugger(title) {
-		    if (!slugs.hasOwnProperty(title)) {
-			    return title;
-		    }
 
-		    var newTitle = title.replace(/-\d/, '');
-
-		    return slugger(newTitle + '-' + (++slugs[title]));
-
-	    }*/
 
 
 	    /**
@@ -52,10 +43,15 @@
 		    if (method === 'POST') {
 			    return $http.post('data/new-post', data);
 		    } else {
+			    console.log('put sent');
+			    
 			    return $http.put('data/edit-post', data);
 		    }
 	    }
 
+	    function deletePost(slug) {
+		    return $http.delete('data/delete-post/' + slug);
+	    }
 
         /**
          * @function stores the HTML fragment in the fullPosts Data base.
@@ -73,6 +69,11 @@
         }
 
         function splitToCatagories(postsArr) {
+
+	        // reset the categories
+	        tags = {};
+	        authors = {};
+	        dates = {};
 
 	        for (var i = 0; i < postsArr.length; i++) {
 		        (function(post) {
@@ -264,6 +265,8 @@
          * @exports
          */
         this.getSinglePost = getSinglePost;
+	    
+	    this.storeFullPost = storeFullPost;
 
         this.getNumberOfPages = getNumberOfPages;
 
@@ -271,21 +274,52 @@
 
         this.returnPosts = function (){return posts};
 
-        this.postsPerPage = function(){ return postsPerPage};
+	    this.postsPerPage = function(){
+		    return postsPerPage
+	    };
 
-	    this.getTags = function (){return tags;};
+	    
+	    
+	    
+	    
+        
+	    
+	    
 
-	    this.getAuthors = function (){return authors;};
+	    this.getTags = function (){
+		    //console.log(tags);
+		    
+		    return tags;
+	    };
 
-	    this.getDates = function (){return dates;};
+	    this.getAuthors = function (){
+		    //console.log(authors);
+		    return authors;
+	    };
+
+	    this.getDates = function (){
+
+		    //console.log(dates);
+		    return dates;
+	    };
 
 	    this.getNumberOfAllPosts = function () {
+		    //console.log(posts);
+		    
 		    return posts.length;
 	    };
 
+	    
+	    
+	    
+	    
+	    
+	    
 	    this.onlyWords = onlyWords;
 
-    this.sendPost = sendPost;
+        this.sendPost = sendPost;
+
+	    this.deletePost = deletePost;
     }
 
     postsService.$inject = ['$http', '$sanitize', '$location', '$filter'];

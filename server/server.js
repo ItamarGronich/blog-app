@@ -13,6 +13,8 @@ app.use(express.static( root + 'client/'));
 
 app.use(logger('dev'));
 
+app.use(bodyParser.urlencoded({ extended: false }));
+
 app.use(bodyParser.json());
 
 

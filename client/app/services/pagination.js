@@ -76,6 +76,22 @@
             $location.search(params);
         }
 
+        function redirectTo(where, slug) {
+            switch (where) {
+                case 'post':
+                    $location.path('/post/' + slug);
+                    break;
+                case 'posts-board':
+                    $location.path('/posts/');
+                    break;
+                case 'admin' :
+                    $location.path('/admin');
+                    break;
+            }
+        }
+
+        this.redirectTo = redirectTo;
+
         this.initUrl = initUrl;
 
         this.onlyHyphen = onlyHyphen;

@@ -2,35 +2,37 @@
 	
 	app.controller('editNewController', editNewController);
 
-	function editNewController($routeParams, postsService, posts, mdFile, $sanitize, pagination) {
+	function editNewController($routeParams, postsService, posts, mdFile, $sanitize, pagination, $timeout) {
 
 		var location = $routeParams.method,
 			slug = $routeParams.postTitle,
 			that = this;
 
-		function submit(method) {
-
-			var postData = {
+		function renderPostData(slug) {
+			return {
 				post: {
 					title: that.title,
-					slug: undefined,
+					slug: slug,
 					author: that.author,
 					date: Date.now().toString(),
 					tags: that.tags.split(', '),
 					description: that.description
 				},
 				postHtml: that.html,
-				postMd: that.mdFile
+				postMd: that.md
 			};
-
-			console.log(postData);
-			
-			postsService.sendPost(postData, method);
-
-
 		}
 
-		that.mdFile = (function(){
+		function submit(method, slug) {
+			var postData = renderPostData(slug);
+			return postsService.sendPost(postData, method);
+		}
+
+		function deletePost(slug){
+			return postsService.deletePost(slug);
+		}
+
+		that.md = (function(){
 			
 			if (mdFile && mdFile.content.code === 'ENOENT') {return}
 
@@ -40,18 +42,15 @@
 		})();
 
 		that.html = (function(){
-			if (!that.mdFile) {return}
-			return $sanitize(marked(mdFile.content))
+			if (!that.md) {return}
+			return $sanitize(marked(that.md));
 		})();
 
 		that.renderHTML = function (){
 			
-			if (!that.mdFile) { renderHTML(''); return;}
-			renderHTML(that.mdFile);
+			if (!that.md) { renderHTML(''); return;}
+			renderHTML(that.md);
 		};
-
-
-
 
 
 		function ifEdit() {
@@ -76,8 +75,36 @@
 			that.description = post.description;
 			that.tags = post.tags.join(', ');
 
+
+			that.deletePost = function(){
+				return deletePost(post.slug)
+					.then(function () {
+							setTimeout(function(){
+								postsService
+									.getPosts(true)
+									.then(pagination.redirectTo.bind(this, 'admin'));
+							}, 300);
+						},
+						function (err){
+							console.log(err);
+						});
+			};
+
+
 			that.submit = function(){
-				submit(false);
+				return submit(that.method, post.slug)
+					.then(function (promise) {
+							var slug = promise.data;
+						postsService.storeFullPost(slug, $sanitize(that.html));
+							setTimeout(function(){
+								postsService
+									.getPosts(true)
+									.then(pagination.redirectTo.bind(this, 'post', slug));
+							}, 300);
+						},
+						function (err){
+							console.log(err);
+						});
 			};
 
 		}
@@ -88,29 +115,50 @@
 
 			that.method = 'POST';
 
+			function generateSlug(){
+				if(that.title) return that.title.replace(/([\s\W])+/g, '-');
+
+				return '';
+			}
+
+
 			that.submit = function(){
-				submit(true);
+				return submit(that.method, generateSlug())
+					.then(function (promise) {
+						var slug = promise.data;
+						setTimeout(function(){
+							postsService
+								.getPosts(true)
+								.then(pagination.redirectTo.bind(this, 'post', slug));
+						}, 300);
+					},
+					function (err){
+						console.log(err);
+					});
 			};
 
 		}
 
 		function renderHTML(markdown){
 			that.html =  $sanitize(marked(markdown));
+
 		}
 
 
 		// Switch function.
 		(function (location) {
+			
 			if (location === 'edit'){
 				ifEdit();
 			} else if (location === 'new') {
 				ifNew();
 			}
+			
 		})(location);
 
 
 		
 	}
 
-	editNewController.$inject = ['$routeParams', 'postsService', 'posts', 'mdFile', '$sanitize', 'pagination'];
+	editNewController.$inject = ['$routeParams', 'postsService', 'posts', 'mdFile', '$sanitize', 'pagination', '$scope', '$timeout'];
 })(angular.module('blogApp'), jQuery, marked);
