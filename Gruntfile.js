@@ -107,4 +107,5 @@ module.exports = function (grunt) {
 	grunt.registerTask('concatJS', ['concat']);
 
 	grunt.registerTask('shrinkJS', ['concatJS', 'uglify']);
+
 };

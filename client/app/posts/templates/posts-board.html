@@ -1,20 +1,22 @@
-<h2 class="page-header" data-ng-click="click()">
-    Showing {{data.posts.length}} posts
-</h2>
+<section class="col-md-8">
+    <h2 class="page-header" data-ng-click="click()">
+        Showing {{data.posts.length}} posts
+    </h2>
 
-<thumb-posts data-ng-repeat="post in data.posts |limitTo: data.postsPerPage :((data.pageNumber -1) * 3) as results" info="results[$index]" >
-</thumb-posts>
+    <thumb-posts data-ng-repeat="post in data.posts |limitTo: data.postsPerPage :((data.pageNumber -1) * 3) as results" info="results[$index]" >
+    </thumb-posts>
 
-<ul class="pager" >
-    <li class="previous" data-ng-show="data.btnShow('prev')" data-ng-click="data.pageCtrl($event)">
+    <ul class="pager" >
+        <li class="previous" data-ng-show="data.btnShow('prev')" data-ng-click="data.pageCtrl($event)">
 
-        <a href="">&larr; Newer</a>
-    </li>
+            <a href="">&larr; Newer</a>
+        </li>
 
-    <li class="next" data-ng-show="data.btnShow('next')" data-ng-click="data.pageCtrl($event)">
-        <a href="">  Older &rarr;
-        </a>
-    </li>
+        <li class="next" data-ng-show="data.btnShow('next')" data-ng-click="data.pageCtrl($event)">
+            <a href="">  Older &rarr;
+            </a>
+        </li>
 
 
-</ul>
+    </ul>
+</section>

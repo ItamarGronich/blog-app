@@ -15,18 +15,43 @@
          *                                 allowed to be displayed per page.
          */
         var posts,
-            filteredPosts, // POSSIBLY DEPRECATED
+            filteredPosts,
             postsPerPage = 3,
             fullPosts = {},
+	        slugs, // on Object of slugs every key is an array with two props 0: slug 1: number of copies
 
             /*
             * ======= Filtered Objects ======
             *
             * will hold the posts filtered by different categories
             * */
-            tags = {},
-            authors = {},
-            dates = {};
+            tags,
+            authors,
+            dates;
+
+
+
+
+	    /**
+	     *
+	     * @param postData (Object} - should contain the full post in postData.fullPost and should contain post
+	     *                            thumb in postData.post.
+	     * @returns {String} the URL to current entered post.
+	     */
+	    function sendPost(data, method) {
+
+		    if (method === 'POST') {
+			    return $http.post('data/new-post', data);
+		    } else {
+			    console.log('put sent');
+			    
+			    return $http.put('data/edit-post', data);
+		    }
+	    }
+
+	    function deletePost(slug) {
+		    return $http.delete('data/delete-post/' + slug);
+	    }
 
         /**
          * @function stores the HTML fragment in the fullPosts Data base.
@@ -44,6 +69,11 @@
         }
 
         function splitToCatagories(postsArr) {
+
+	        // reset the categories
+	        tags = {};
+	        authors = {};
+	        dates = {};
 
 	        for (var i = 0; i < postsArr.length; i++) {
 		        (function(post) {
@@ -147,6 +177,7 @@
                 return $http({method: 'GET', url: 'data/get-posts'})
                     .then(function (e) {
                         posts = e.data.posts;
+	                    slugs = e.data.slugs;
 	                    splitToCatagories(posts);
                     });
             }
@@ -215,11 +246,18 @@
             // gets post
             return $http({method: 'GET', url: path})
                         .then(function (response) {
-                            console.log('loaded data from the server');
-                            var html = $sanitize(response.data); // sanitizes retrieved html
-                            return storeFullPost(fileName, html); // stores and returns the html fragment.
+	                        console.log('loaded data from the server');
+	                        var html = $sanitize(response.data); // sanitizes retrieved html
+	                        return storeFullPost(fileName, html); // stores and returns the html fragment.
+
+
                         });
         }
+
+	    function onlyWords(string) {
+		    return string.replace(/\W*/g, '');
+
+	    }
 
 
         /**
@@ -227,6 +265,8 @@
          * @exports
          */
         this.getSinglePost = getSinglePost;
+	    
+	    this.storeFullPost = storeFullPost;
 
         this.getNumberOfPages = getNumberOfPages;
 
@@ -234,17 +274,52 @@
 
         this.returnPosts = function (){return posts};
 
-        this.postsPerPage = function(){ return postsPerPage};
+	    this.postsPerPage = function(){
+		    return postsPerPage
+	    };
 
-	    this.getTags = function (){return tags;};
+	    
+	    
+	    
+	    
+        
+	    
+	    
 
-	    this.getAuthors = function (){return authors;};
+	    this.getTags = function (){
+		    //console.log(tags);
+		    
+		    return tags;
+	    };
 
-	    this.getDates = function (){return dates;};
+	    this.getAuthors = function (){
+		    //console.log(authors);
+		    return authors;
+	    };
+
+	    this.getDates = function (){
+
+		    //console.log(dates);
+		    return dates;
+	    };
 
 	    this.getNumberOfAllPosts = function () {
+		    //console.log(posts);
+		    
 		    return posts.length;
-	    }
+	    };
+
+	    
+	    
+	    
+	    
+	    
+	    
+	    this.onlyWords = onlyWords;
+
+        this.sendPost = sendPost;
+
+	    this.deletePost = deletePost;
     }
 
     postsService.$inject = ['$http', '$sanitize', '$location', '$filter'];

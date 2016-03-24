@@ -20,17 +20,39 @@
             return $delegate;
         }]);
 
+
+        /*========================================
+        *       Marked Library Configuration
+        * ======================================== */
+
+	    marked.setOptions({
+		    // GitHub Flavored Markdown
+		    gfm: true,
+		    // GFM tables
+		    tables: true,
+		    // GFM line breaks
+		    breaks: true,
+		    // Better lists handling
+		    smartLists: true,
+		    // Better punctuation handling
+		    smartypants: true,
+		    // Code blocks language prefix (reset default)
+		    langPrefix: '',
+		    // Prefix for headings ID's
+		    headerPrefix: 'hid-',
+		    highlight: false
+	    });
+
         // router configuration
         $routeProvider
             .when('/', {
                 redirectTo: '/posts/:pageNumber'
             })
-            .when('/posts/:pageNumber?:query?', {
+            .when('/posts/:pageNumber?', {
                 templateUrl: '/app/posts/templates/posts-board.html',
                 controller: 'postsController as data',
                 resolve: {
                     posts: function (postsService){
-	                    console.log('route cycle');
                         return postsService.getPosts();
                     },
                     genUrl: function (pagination) {
@@ -39,8 +61,7 @@
                 }
             })
             .when('/post/:postTitle', {
-                template: '<div data-ng-bind-html="data.post"></div>'
-                ,
+                template: '<section class="col-md-8"><div data-ng-bind-html="data.post"></div></section>',
                 controller: 'singlePostController as data',
                 resolve: {
                     post: function (postsService, pagination , $route) {
@@ -50,9 +71,44 @@
                     }
                 }
             })
-            .when('/admin', {
-                templateUrl: '/app/admin/templates/admin.html'
+            .when('/admin/', {
+                templateUrl: '/app/admin/templates/admin.html',
+                controller: 'adminController as admin',
+                resolve: {
+		            posts: function (postsService){
+			            return postsService.getPosts();
+		            }
+	            }
             })
+	    .when('/admin/:method/post/:postTitle?',{
+		    templateUrl: 'app/admin/templates/new-edit.html',
+		    controller: 'editNewController as edit',
+		    resolve: {
+			    posts: function(postsService){
+				    return postsService.getPosts();
+			    },
+			    mdFile: function ($route, $http) {
+				    if ($route.current.params.postTitle) {
+					    return $http({
+						    method: 'GET',
+						    url: 'data/get-md-file/' + $route.current.params.postTitle
+					    })
+					    .then(function (promise) {
+						    var url = promise.config.url,
+						    mdFile = {
+							    fileName: url.slice(url.lastIndexOf('/')),
+						        content: promise.data
+						    };
+
+						    console.log(mdFile);
+						    
+
+						    return mdFile;
+					    });
+				    }
+			    }
+		    }
+	    })
     }
 
 

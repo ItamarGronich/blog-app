@@ -7,7 +7,7 @@
 
 (function (app) {
 
-    function genUrl($route, $routeParams, postsService ) {
+    function genUrl($route, $routeParams, postsService, $location) {
 
         /**
          * @function initUrl - inspects the current url and the length of the filtered posts
@@ -66,14 +66,42 @@
             })
         }
 
+        function updateUrl(type, value) {
+            var params = {},
+                path = $location.path();
+
+            params[type] = value;
+
+            $location.url(path);
+            $location.search(params);
+        }
+
+        function redirectTo(where, slug) {
+            switch (where) {
+                case 'post':
+                    $location.path('/post/' + slug);
+                    break;
+                case 'posts-board':
+                    $location.path('/posts/');
+                    break;
+                case 'admin' :
+                    $location.path('/admin');
+                    break;
+            }
+        }
+
+        this.redirectTo = redirectTo;
+
         this.initUrl = initUrl;
 
         this.onlyHyphen = onlyHyphen;
 
         this.hyphenUrlToUrl = hyphenUrlToUrl;
+
+        this.updateUrl = updateUrl;
     }
 
-    genUrl.$inject = ['$route','$routeParams', 'postsService'];
+    genUrl.$inject = ['$route','$routeParams', 'postsService', '$location'];
 
     app.service('pagination', genUrl );
 
