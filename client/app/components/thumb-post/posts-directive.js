@@ -19,7 +19,11 @@
 
                     return 'Posted on ' + date;
 
+                    
+
                 };
+                
+                $scope.updateUrl = pagination.updateUrl;
             }
         }
     });

@@ -1,7 +1,7 @@
 {
   "name": "blogapp",
   "scripts": {
-    "start": "node index.js"
+    "serve": "nodemon server/server.js"
   },
   "devDependencies": {
     "grunt": "0.4.5",

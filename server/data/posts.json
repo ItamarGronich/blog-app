@@ -109,18 +109,6 @@
         "Observables"
       ],
       "description": "RxJS is short for Reactive Extensions for JavaScript. It is an open source library of libraries. Its is maintained with collaboration of opens source developers and Microsoft together in many different languages and technologies. One great library under the RxJS collection is Observables - a completely rethought way of using the Observable patter."
-    },
-    {
-      "title": "Test Post",
-      "slug": "new-post",
-      "author": "Itamar Gronich",
-      "date": "1458828807455",
-      "tags": [
-        "JavaScript",
-        "AngularJS",
-        "React"
-      ],
-      "description": "an edited post"
     }
   ],
   "slugs": {

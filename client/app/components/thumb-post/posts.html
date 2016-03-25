@@ -33,7 +33,8 @@ the scope keys:
         <p class="pull-left">
             <b>Tags:&nbsp;</b>
             <span data-ng-repeat="tag in postInfo.tags">
-                <a href="#" class="label label-default">{{postInfo.tags[$index]}}</a>
+                <a href="#" class="label label-default"
+				data-ng-click="updateUrl('category', tag.toLowerCase());$event.preventDefault();">{{tag}}</a>
             </span>
 
         </p>
