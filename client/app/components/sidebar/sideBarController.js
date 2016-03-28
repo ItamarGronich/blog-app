@@ -60,7 +60,7 @@
 			 */
 			function toggleActive($el){
 				if ($currentActive) {$currentActive.removeClass(activeClass);}
-				$currentActive = $el.addClass(activeClass);
+				if ($el) {$currentActive = $el.addClass(activeClass);}
 			}
 
 			function findInContext(context, query) {
@@ -96,6 +96,8 @@
 					var $selectedMonth = findInContext('#months', params.month.slice(0,3));
 					toggleActive($selectedMonth);
 
+				} else if(params.hasOwnProperty('search')){
+					toggleActive();
 				} else {
 					toggleActive($sidebar.find('#showAllPosts'));
 				}
