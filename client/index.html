@@ -84,7 +84,7 @@
 				<div class="well">
 					<h4>Search</h4>
 
-					<form data-ng-submit="sb.submitSearch($event); sb.clicker($event)">
+					<form data-ng-submit="sb.submitSearch($event)">
 						<div class="input-group">
 							<input type="search" name="search" class="form-control" data-ng-model="sb.searchVal">
 							<span class="input-group-btn">
@@ -106,7 +106,7 @@
 								Show All
 					     ======================== -->
 					<div class="list-group" >
-						<a href="" class="list-group-item active" id="showAllPosts"
+						<a href="" class="list-group-item" id="showAllPosts"
 						   data-ng-click="sb.updateUrl()">
 							<span class="badge" ng-bind="sb.numberOfAllPosts"></span>
 							Show All Posts
@@ -119,7 +119,7 @@
 					     ======================== -->
 					<!--/posts?category={{tag.$key.toLowerCase()}}-->
 					<h4><small class="glyphicon glyphicon-tag"></small> Category</h4>
-					<div class="list-group">
+					<div class="list-group" id="categories">
 						<a href=""
 						   data-ng-click="sb.updateUrl('category', tag.$key.toLowerCase())"
 						   class="list-group-item"
@@ -134,7 +134,7 @@
 								Authors
 					     ======================== -->
 					<h4><small class="glyphicon glyphicon-user"></small> Author</h4>
-					<div class="list-group">
+					<div class="list-group" id="authors">
 						<a href="" class="list-group-item"
 						   data-ng-click="sb.updateUrl( 'author', author.$key.replace(' ', '-').toLowerCase() )"
 						   data-ng-repeat="author in sb.authors | toArray | orderBy: '$key'">
@@ -148,7 +148,7 @@
 								Month
 					     ======================== -->
 					<h4><small class="glyphicon glyphicon-time"></small> Month</h4>
-					<div class="list-group" >
+					<div class="list-group"  id="months">
 						<div data-ng-repeat="years in sb.dates | orderBy: '-0'"
 						data-ng-controller="monthController">
 							<span class="list-group-item disabled" data-ng-click="$event.stopPropagation()">

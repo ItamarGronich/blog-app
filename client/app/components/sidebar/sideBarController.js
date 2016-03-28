@@ -1,28 +1,31 @@
-(function (app) {
+(function (app ,$) {
 	app.controller('sideBarController', sideBarController);
 
 
-	var currentActive = document.body.querySelector('#showAllPosts');
 
-	function sideBarController($location, postsService, pagination, $rootScope, $scope) {
+
+	function sideBarController($location, postsService, pagination, $rootScope, $scope, $timeout) {
 		var that = this,
 			$sidebar = $('#sidebar');
 
-		
-		
-		function assignAllVars(obj){
+		/**
+		 * Gets a data object
+		 */
+		function assignAllVars(){
+
+			var datesObj = postsService.getDates();
 
 			console.log('run');
-			that.numberOfAllPosts = obj.numberOfAllPosts;
-			that.tags = obj.tags;
-			that.authors = obj.authors;
+			that.numberOfAllPosts = postsService.getNumberOfAllPosts();
+			that.tags = postsService.getTags();
+			that.authors = postsService.getAuthors();
 
 			that.dates = [];
 
-			for (var year in obj.dates) {
+			for (var year in datesObj) {
 				var arr = [year];
-				for (var month in obj.dates[year]) {
-					arr.push([month, obj.dates[year][month]])
+				for (var month in datesObj[year]) {
+					arr.push([month, datesObj[year][month]])
 				}
 				that.dates.push(arr);
 			}
@@ -35,51 +38,72 @@
 		 */
 		function instantiateData(){
 			if (typeof postsService.getPosts().then === 'function') {
+
 				return postsService.getPosts()
-					.then(function(){
-						console.log({
-							numberOfAllPosts: postsService.getNumberOfAllPosts(),
-							tags: postsService.getTags(),
-							authors: postsService.getAuthors(),
-							dates: postsService.getDates()
-						});
+					.then(assignAllVars);
 
-						assignAllVars({
-							numberOfAllPosts: postsService.getNumberOfAllPosts(),
-							tags: postsService.getTags(),
-							authors: postsService.getAuthors(),
-							dates: postsService.getDates()
-						}) ;
-					})
 			} else {
-
-
-				console.log({
-					numberOfAllPosts: postsService.getNumberOfAllPosts(),
-					tags: postsService.getTags(),
-					authors: postsService.getAuthors(),
-					dates: postsService.getDates()
-				});
-				
-				assignAllVars({
-					numberOfAllPosts: postsService.getNumberOfAllPosts(),
-					tags: postsService.getTags(),
-					authors: postsService.getAuthors(),
-					dates: postsService.getDates()
-				})
+				assignAllVars();
 			}
 		}
 
 
+		var decideActiveState = (function () {
 
-		this.clicker = function (e) {
-			if (currentActive){
-				currentActive.classList.remove('active');
+			var $currentActive ;
+
+			var activeClass = 'active';
+
+			/**
+			 * removes the old active $el and assigns the provided
+			 * @param $el
+			 */
+			function toggleActive($el){
+				if ($currentActive) {$currentActive.removeClass(activeClass);}
+				$currentActive = $el.addClass(activeClass);
 			}
 
-			currentActive = e.target;
-			e.target.classList.add('active')
-		};
+			function findInContext(context, query) {
+
+				var re = new RegExp('\\W' + query + '\\W', 'i');
+				console.log(re);
+				
+				return $sidebar.find(context).find('a').filter(function(){
+					console.log(this);
+					console.log('match: ', $(this).text().search(re));
+					
+					if ($(this).text().search(re) !== -1){
+						console.log($(this).text().search(re));
+						
+						return true;
+					}
+				});
+
+			}
+
+			return function(params) {
+				console.log(params);
+				
+				if(params.hasOwnProperty('category')) {
+					var $selectedCategory = findInContext('#categories', params.category);
+					toggleActive($selectedCategory);
+
+				} else if(params.hasOwnProperty('author')) {
+					var $selectedAuthor = findInContext('#authors', params.author.split('-').join(' '));
+					toggleActive($selectedAuthor);
+
+				} else if(params.hasOwnProperty('month')) {
+					var $selectedMonth = findInContext('#months', params.month.slice(0,3));
+					toggleActive($selectedMonth);
+
+				} else {
+					toggleActive($sidebar.find('#showAllPosts'));
+				}
+
+			};
+
+		})();
+
 
 		this.searchVal = '';
 
@@ -94,7 +118,8 @@
 
 		};
 
-		$rootScope.$on('$routeChangeSuccess', function() {
+		$scope.$on('$routeChangeSuccess', function($event, current, previous) {
+			console.log(current.params);
 
 			var currentLocation = $location.path().split('/').slice(0, 3).join('/'),
 			    pathEdit        = '/admin/edit',
@@ -103,6 +128,10 @@
 			$sidebar.toggleClass('collapse', (currentLocation === pathEdit || currentLocation === pathNew));
 
 			instantiateData();
+
+			$timeout(function () {
+				decideActiveState(current.params);
+			});
 		});
 
 
@@ -114,5 +143,7 @@
 	
 
 
-	sideBarController.$inject = ['$location', 'postsService', 'pagination', '$rootScope', '$scope']
-})(angular.module('blogApp'));
+	sideBarController.$inject = ['$location', 'postsService', 'pagination', '$rootScope', '$scope', '$timeout']
+
+
+})(angular.module('blogApp'), jQuery);

@@ -43,7 +43,10 @@
 		    highlight: false
 	    });
 
-        // router configuration
+
+	    /*========================================
+	     *       Marked Library Configuration
+	     * ======================================== */
         $routeProvider
             .when('/', {
                 redirectTo: '/posts/:pageNumber'
